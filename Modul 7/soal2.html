@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerdas Cermat Arena - Level HOTS (TPEN4406)</title>
+    <style>
+        :root {
+            --bg-space: #040612;
+            --bg-arena: #0b1126;
+            --primary: #00f2fe;
+            --secondary: #9d4edd;
+            --neon-green: #10b981;
+            --neon-red: #f43f5e;
+            --text-light: #f8fafc;
+            --text-dark: #475569;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-space);
+            color: var(--text-light);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, #0e1731 0%, #040612 100%);
+        }
+
+        /* --- CONTAINER UTAMA --- */
+        .panel {
+            width: 100%;
+            max-width: 800px;
+            background: var(--bg-arena);
+            border: 2px solid rgba(0, 242, 254, 0.15);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 50px rgba(0, 242, 254, 0.05);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        h1.title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .btn-glow {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 16px 45px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.6);
+        }
+
+        /* --- PANEL KAMPUS/HUD ARENA --- */
+        .arena-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .hud-item {
+            background: rgba(255,255,255,0.02);
+            padding: 10px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.05);
+            min-width: 140px;
+        }
+
+        .hud-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .hud-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .question-box {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 35px;
+            text-align: left;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 16px;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* --- SELEKSI JAWABAN (A-E) --- */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px 20px;
+            text-align: left;
+            color: #e2e8f0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            line-height: 1.5;
+        }
+
+        .option-btn:hover {
+            background: rgba(0, 242, 254, 0.04);
+            border-color: var(--primary);
+            transform: translateX(6px);
+        }
+
+        .option-badge {
+            font-weight: 800;
+            color: var(--primary);
+            margin-right: 15px;
+            background: rgba(0, 242, 254, 0.1);
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        /* --- STATUS AKSI JAWABAN --- */
+        .opt-correct {
+            background: rgba(16, 185, 129, 0.15) !important;
+            border-color: var(--neon-green) !important;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+        }
+        .opt-correct .option-badge {
+            background: var(--neon-green);
+            color: #fff;
+        }
+
+        .opt-wrong {
+            background: rgba(244, 63, 94, 0.15) !important;
+            border-color: var(--neon-red) !important;
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.25);
+        }
+        .opt-wrong .option-badge {
+            background: var(--neon-red);
+            color: #fff;
+        }
+
+        /* --- ARSITEKTUR FEEDBACK --- */
+        .feedback-container {
+            margin-top: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .text-correct { color: var(--neon-green); }
+        .text-wrong { color: var(--neon-red); }
+
+        .btn-next {
+            margin-top: 20px;
+            background: #fff;
+            color: #000;
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            float: right;
+            transition: background 0.2s;
+        }
+        .btn-next:hover { background: #cbd5e1; }
+
+        .score-big {
+            font-size: 5.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-shadow: 0 0 35px rgba(0, 242, 254, 0.4);
+            margin: 25px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- RESPONSIVE ADJUSTMENT --- */
+        @media (max-width: 600px) {
+            .panel { padding: 20px; }
+            h1.title { font-size: 1.8rem; }
+            .question-box { font-size: 1.1rem; }
+            .option-btn { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOBBY / HALAMAN AWAL -->
+    <div id="lobby-panel" class="panel">
+        <div style="font-size: 3.5rem; margin-bottom: 15px;">🧠</div>
+        <h1 class="title">Cerdas Cermat Arena</h1>
+        <p class="subtitle">Sistem Evaluasi Asesmen Daring - Level HOTS (TPEN4406)</p>
+        
+        <div style="background: rgba(255,255,255,0.02); padding: 25px; border-radius: 18px; text-align: left; margin-bottom: 35px; border: 1px solid rgba(255,255,255,0.05); line-height: 1.6;">
+            <p style="margin-bottom: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;">Spesifikasi Kompetisi:</p>
+            <p style="color: #cbd5e1; font-size: 0.95rem;">
+                • Menguji 10 soal skenario kasus dengan kompleksitas penalaran tinggi selevel ujian universitas.<br>
+                • Format Pilihan Ganda penuh (Opsi A sampai E).<br>
+                • Tidak menggunakan hitung mundur agar Anda fokus menganalisis jebakan konsep materi.<br>
+                • Disertai penjelasan akademik lengkap di setiap akhir jawaban nomor soal.
+            </p>
+        </div>
+        <button class="btn-glow" onclick="mulaiKompetisi()">Mulai Analisis</button>
+    </div>
+
+    <!-- ARENA UTAMA JALANNYA KUIS -->
+    <div id="arena-panel" class="panel hide">
+        <div class="arena-header">
+            <div class="hud-item">
+                <div class="hud-label">Nomor Soal</div>
+                <div id="hud-progress" class="hud-value">1 / 10</div>
+            </div>
+            <div class="hud-item">
+                <div class="hud-label">Total Poin</div>
+                <div id="hud-score" class="hud-value">0</div>
+            </div>
+        </div>
+
+        <div id="question-box" class="question-box">Memuat simulasi studi kasus akademis...</div>
+
+        <div id="options-box" class="options-grid">
+            <!-- Inject Komponen Opsi Jawaban oleh JS -->
+        </div>
+
+        <div id="feedback-box" class="hide">
+            <!-- Inject Penjelasan Interaktif -->
+        </div>
+    </div>
+
+    <!-- PAPAN SKOR / SCREEN HASIL AKHIR -->
+    <div id="result-panel" class="panel hide">
+        <div style="font-size: 3.5rem; margin-bottom: 15px;">📊</div>
+        <h1 class="title">Evaluasi Selesai</h1>
+        <p class="subtitle">Rekapitulasi Capaian Kompetensi Mandiri</p>
+        <div id="final-score" class="score-big">0</div>
+        <p id="evaluation-text" style="font-size: 1.15rem; margin-bottom: 40px; color: #cbd5e1; padding: 0 20px; line-height: 1.6;"></p>
+        <button class="btn-glow" onclick="ulangiUjian()">Uji Ulang Kompetensi</button>
+    </div>
+
+    <!-- --- CORE SYSTEM SCRIPT --- -->
+    <script>
+        const databaseHots = [
+            {
+                q: "Dalam implementasi pembelajaran berbasis elektronik (e-learning), dosen sering kali terjebak menggunakan tes online hanya untuk mengukur ingatan jangka pendek di akhir bab. Jika mengacu pada pemikiran Swearingen (2004) mengenai tata kelola asesmen, tindakan dosen tersebut telah mereduksi fungsi hakiki asesmen daring yang seharusnya bertindak sebagai...",
+                options: [
+                    "Pengendali administratif kuota kelulusan mahasiswa tingkat akhir",
+                    "Alat ukur statis untuk menentukan indeks prestasi kumulatif (IPK)",
+                    "Bagian integral dan dinamis dari proses interaksi serta perbaikan kualitas instruksional",
+                    "Instrumen seleksi eksternal yang memisahkan mahasiswa reguler dan non-reguler",
+                    "Dokumen legal formal untuk keperluan akreditasi institusi program studi"
+                ],
+                ans: 2,
+                explain: "Swearingen menekankan inovasi asesmen daring menggeser paradigma lama. Asesmen bukan lagi sekadar alat penghakiman akhir (judgment), melainkan bagian integral dan dinamis dari proses interaksi serta perbaikan kualitas instruksional pembelajaran daring secara kontinu."
+            },
+            {
+                q: "Sebuah universitas menyelenggarakan ujian daring serentak nasional. Namun, sistem navigasi platform ujiannya dirancang sangat rumit dengan banyak instruksi pemrograman teks teknis yang harus diinput oleh peserta. Akibatnya, banyak mahasiswa yang menguasai substansi materi mendapatkan nilai buruk hanya karena gagal memahami operasional tombol ujian. Kasus ini merupakan bentuk pelanggaran fatal terhadap prinsip utama asesmen daring menurut Walker (2007), yaitu...",
+                options: [
+                    "Prinsip Transparansi Rubrik Penilaian",
+                    "Prinsip Akurasi yang melarang pengujian kemampuan teknologi di luar kompetensi esensial mata kuliah",
+                    "Prinsip Inklusivitas sarana prasarana fisik",
+                    "Prinsip Konsistensi alur pelaporan nilai mahasiswa",
+                    "Prinsip Keamanan berlapis dari serangan siber eksternal"
+                ],
+                ans: 1,
+                explain: "Menurut Walker, asesmen daring bertugas mengukur capaian kompetensi materi kuliah, bukan menguji seberapa mahir siswa menggunakan alat teknologi baru (kecuali jika itu tujuan utama mata kuliahnya). Kompleksitas teknis navigasi merusak akurasi pengukuran nilai substansial."
+            },
+            {
+                q: "Perhatikan alur pengembangan alat penilaian berikut:\n1. Menetapkan tujuan tes dan kompetensi\n2. [...]\n3. Menulis dan merumuskan butir-butir soal\n4. Menelaah dan melakukan validasi instrumen\n5. Perakitan serta uji coba fungsional sistem\n\nLangkah nomor 2 yang kosong di atas merupakan pilar penentu validitas logis sebuah tes. Langkah yang dimaksud adalah...",
+                options: [
+                    "Menghitung formula reliabilitas empiris soal menggunakan rumus statistika",
+                    "Memetakan alokasi anggaran server penampung beban ujian",
+                    "Menyusun kisi-kisi atau cetak biru (blueprint) asesmen sebagai pedoman operasional",
+                    "Mengumumkan kata sandi akses lembar ujian kepada pengawas wilayah",
+                    "Menentukan persentase tingkat kelulusan minimum (passing grade) mahasiswa"
+                ],
+                ans: 2,
+                explain: "Berdasarkan prosedur instruksional pengembangan alat ukur hasil belajar menurut Belawati (2019), pembuatan kisi-kisi atau cetak biru (blueprint) mutlak dikerjakan sebelum penulisan soal untuk menjamin keselarasan (alignment) antara tujuan kurikulum dengan instrumen tes."
+            },
+            {
+                q: "Dalam menyusun butir soal objektif Pilihan Ganda (A-E) untuk ujian daring tingkat sarjana, pembuat soal dituntut memitigasi faktor guessing (menebak secara spekulatif). Berdasarkan teori evaluasi digital, metode pengondisian pengecoh (distractor) yang paling efektif untuk memaksa mahasiswa melakukan analisis kognitif tingkat tinggi adalah...",
+                options: [
+                    "Membuat opsi jawaban salah sekilas terlihat sangat konyol dan tidak masuk akal",
+                    "Menyusun opsi pengecoh yang memiliki tingkat kebenaran relatif sama, homogen, dan logis dari sudut pandang materi",
+                    "Memastikan kalimat pada opsi jawaban yang benar dibuat jauh lebih panjang daripada opsi lainnya",
+                    "Menyisipkan kata-kata mutlak seperti 'pasti', 'selalu', atau 'tidak pernah' di setiap opsi jawaban",
+                    "Menempatkan seluruh kunci jawaban yang benar pada pilihan huruf A secara berurutan"
+                ],
+                ans: 1,
+                explain: "Opsi pengecoh (distractor) yang homogen, logis, dan memiliki tingkat kebenaran relatif sama akan menekan faktor spekulasi asal tebak (guessing). Mahasiswa dipaksa mengandalkan kemampuan analisis tajam untuk memilah jawaban yang paling presisi."
+            },
+            {
+                q: "Ketika mengonfigurasi arsitektur sebuah Learning Management System (LMS) untuk keperluan ujian sumatif, administrator melakukan kesalahan fatal dalam Role Mapping dengan memberikan otoritas 'Editing Teacher' ke dalam profil akun kelompok Student. Implikasi keamanan paling kritis yang dapat merusak validitas hasil ujian satu universitas adalah...",
+                options: [
+                    "Mahasiswa tidak bisa mengunduh kartu tanda peserta ujian mereka masing-masing",
+                    "Mahasiswa dapat melihat skema kunci jawaban, memodifikasi isi bank soal (question bank), dan mengubah rekaman nilai mereka sendiri",
+                    "Sistem otomatisasi server akan mengalami degradasi kecepatan loading halaman hingga 50%",
+                    "Browser yang digunakan mahasiswa akan mendeteksi platform sebagai situs berbahaya (phishing)",
+                    "Akun dosen pengampu secara otomatis terhapus dari sistem database utama kampus"
+                ],
+                ans: 1,
+                explain: "Hak akses 'Editing Teacher' memiliki kontrol penuh atas manipulasi bank soal dan rekaman nilai di LMS. Jika role ini jatuh atau terkonfigurasi ke user Student, integritas data ujian hancur total karena mahasiswa bisa mengubah kunci jawaban atau nilai mereka sendiri."
+            },
+            {
+                q: "Apabila seorang administrator sistem administrasi akademik UT ingin melakukan tindakan pemeliharaan massal, seperti membekukan hak akses ujian bagi 2.000 mahasiswa yang terdeteksi melanggar administrasi secara instan dalam satu detik, menu operasional Moodle paling tepat yang harus dieksekusi adalah...",
+                options: [
+                    "Single User Enrolment Key Assignment",
+                    "Bulk User Actions",
+                    "Randomize Question Parameters Control",
+                    "Manual Role Mapping Overriding",
+                    "Cache Database Purging Command"
+                ],
+                ans: 1,
+                explain: "Menu 'Bulk User Actions' di dalam arsitektur administrasi LMS (seperti Moodle) digunakan khusus untuk memanipulasi, memodifikasi, memfilter, atau mengunci banyak akun pengguna sekaligus secara masal dan cepat."
+            },
+            {
+                q: "Untuk menjaga marwah dan integritas akademik, sebuah ruang ujian virtual harus diproteksi dari akses pihak luar (seperti joki atau penyusup). Metode filtrasi akses mandiri terkontrol yang mewajibkan mahasiswa memasukkan token kunci sandi unik yang dinamis saat proses pendaftaran ke ruang ujian digital dinamakan...",
+                options: [
+                    "Manual Admin Assignment Upload",
+                    "Guest Access Bypass System",
+                    "Self-Enrollment dengan Enrolment Key",
+                    "Bulk System Account Uploading",
+                    "Automated Direct Synch Link"
+                ],
+                ans: 2,
+                explain: "Metode Self-Enrollment dengan Enrolment Key mengizinkan mahasiswa mendaftar ke kursus/ruang ujian secara mandiri, namun jalurnya dilindungi token kata sandi khusus rahasia untuk memfilter agar orang luar tidak bisa menyusup."
+            },
+            {
+                q: "Dua orang mahasiswa yang duduk bersebelahan mencoba bekerja sama saat melaksanakan ujian daring pilihan ganda di sebuah laboratorium komputer. Namun, mereka frustrasi karena soal nomor 5 di layar mahasiswa A ternyata merupakan soal nomor 37 di layar mahasiswa B, dan pilihan jawaban A di layar mahasiswa A menjadi pilihan jawaban D di layar mahasiswa B. Teknik pertahanan sistem ujian yang sedang diterapkan ini adalah...",
+                options: [
+                    "Algoritma enkripsi end-to-end data pengetikan jawaban",
+                    "Pembatasan akses menggunakan pengamanan Enrolment Key",
+                    "Sinkronisasi asinkronus multi-server lokal",
+                    "Fitur pengacakan otomatis (randomize) terhadap nomor soal dan opsi pilihan jawaban",
+                    "Penguncian sistem operasi menggunakan Safe Exam Browser (SEB)"
+                ],
+                ans: 3,
+                explain: "Fitur pengacakan nomor soal (randomize questions) beserta pengacakan opsi pilihan jawaban (randomize options) di LMS terbukti efektif memitigasi kerja sama antar-mahasiswa karena visualisasi instrumen di tiap layar tampil berbeda."
+            },
+            {
+                q: "Meskipun teknologi kecerdasan buatan dan sistem komputasi awan berkembang pesat, terdapat 'kelemahan laten esensial' yang bersifat sistemik dan tidak dapat dihapus sepenuhnya dalam ekosistem asesmen daring di negara berkembang. Kelemahan laten yang dimaksud adalah...",
+                options: [
+                    "Kehilangan dokumen seluruh kurikulum makro nasional akibat malfungsi software",
+                    "Ketergantungan absolut pada stabilitas infrastruktur jaringan internet, pasokan listrik, serta disparitas literasi digital pengguna akhir",
+                    "Penurunan drastis terhadap minat beli buku teks cetak digital mahasiswa",
+                    "Ketidakmampuan sistem komputer dalam menghitung skor jawaban objektif secara otomatis",
+                    "Penolakan massal dari lembaga akreditasi internasional terhadap legalitas ijazah daring"
+                ],
+                ans: 1,
+                explain: "Kelemahan laten dan mendasar dari seluruh ekosistem digital adalah ketergantungan mutlak pada stabilitas infrastruktur fisik (jaringan internet, pasokan daya listrik) serta tingkat pemahaman teknologi (literasi digital) pengguna di lapangan."
+            },
+            {
+                q: "Seorang dosen ingin menguji kemampuan mahasiswa tingkat akhir dalam mengevaluasi efektivitas kebijakan implementasi pembelajaran daring di daerah 3T. Bentuk instrumen asesmen daring manakah yang memiliki tingkat validitas tertinggi untuk mengukur kompetensi kompleks tersebut?",
+                options: [
+                    "Tes Pilihan Ganda kilat dengan batasan waktu 10 detik per soal",
+                    "Tes Benar-Salah (True/False) sebanyak 100 butir pernyataan pendek",
+                    "Asesmen Autentik berbentuk penugasan analisis kasus (Esai Konstruktif/Proyek Pemecahan Masalah)",
+                    "Tes Menjodohkan (matching test) istilah-istilah teknologi e-learning",
+                    "Pengisian kuesioner skala likert mengenai kepuasan penggunaan aplikasi"
+                ],
+                ans: 2,
+                explain: "Untuk mengukur level kognitif tinggi tingkat sarjana seperti mengevaluasi (C5) atau mencipta (C6), tes objektif pilihan ganda biasa kurang mendalam. Diperlukan asesmen autentik berbasis kasus nyata berupa esai analisis konstruktif atau pengerjaan proyek masalah."
+            }
+        ];
+
+        let indeksSoal = 0;
+        let skorPoin = 0;
+        let sedangMenjawab = true;
+        let audioContext = null;
+
+        // EMULATOR AUDIO CHIP (Web Audio API)
+        function playBuzzer(status) {
+            if (!audioContext) return;
+            const osc = audioContext.createOscillator();
+            const amp = audioContext.createGain();
+            osc.connect(amp);
+            amp.connect(audioContext.destination);
+
+            if (status === 'benar') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.08); // E5
+                osc.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.16); // G5
+                amp.gain.setValueAtTime(0.25, audioContext.currentTime);
+                osc.start();
+                osc.stop(audioContext.currentTime + 0.3);
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, audioContext.currentTime);
+                osc.frequency.setValueAtTime(120, audioContext.currentTime + 0.12);
+                amp.gain.setValueAtTime(0.2, audioContext.currentTime);
+                osc.start();
+                osc.stop(audioContext.currentTime + 0.4);
+            }
+        }
+
+        function mulaiKompetisi() {
+            // Aktivasi Audio API pasca interaksi user
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            document.getElementById('lobby-panel').classList.add('hide');
+            document.getElementById('arena-panel').classList.remove('hide');
+            renderHalamanSoal();
+        }
+
+        function renderHalamanSoal() {
+            sedangMenjawab = true;
+            const dataSekarang = databaseHots[indeksSoal];
+            
+            document.getElementById('hud-progress').innerText = `${indeksSoal + 1} / ${databaseHots.length}`;
+            document.getElementById('question-box').innerText = dataSekarang.q;
+            
+            const areaOpsi = document.getElementById('options-box');
+            areaOpsi.innerHTML = '';
+            
+            const fbBox = document.getElementById('feedback-box');
+            fbBox.className = 'hide';
+            fbBox.innerHTML = '';
+
+            const formatHuruf = ['A', 'B', 'C', 'D', 'E'];
+
+            dataSekarang.options.forEach((teksOpsi, indeks) => {
+                const tombol = document.createElement('button');
+                tombol.className = 'option-btn';
+                tombol.innerHTML = `<span class="option-badge">${formatHuruf[indeks]}</span> ${teksOpsi}`;
+                tombol.onclick = () => koreksiJawaban(indeks, tombol);
+                areaOpsi.appendChild(tombol);
+            });
+        }
+
+        function koreksiJawaban(indeksPilihan, tombolDipilih) {
+            if (!sedangMenjawab) return;
+            sedangMenjawab = false;
+
+            const dataSekarang = databaseHots[indeksSoal];
+            const daftarTombol = document.getElementsByClassName('option-btn');
+            const fbBox = document.getElementById('feedback-box');
+            
+            let htmlFeedback = "";
+
+            if (indeksPilihan === dataSekarang.ans) {
+                tombolDipilih.classList.add('opt-correct');
+                skorPoin += 10;
+                document.getElementById('hud-score').innerText = skorPoin;
+                playBuzzer('benar');
+                htmlFeedback = `<div class="feedback-title text-correct">✔ JAWABAN ANDA BENAR (+10 Poin)</div>`;
+            } else {
+                tombolDipilih.classList.add('opt-wrong');
+                daftarTombol[dataSekarang.ans].classList.add('opt-correct');
+                playBuzzer('salah');
+                htmlFeedback = `<div class="feedback-title text-wrong">❌ JAWABAN ANDA KURANG TEPAT</div>`;
+            }
+
+            htmlFeedback += `<p style="color: #cbd5e1; margin-top: 5px;"><strong>Analisis Teoretis:</strong> ${dataSekarang.explain}</p>`;
+            htmlFeedback += `<button class="btn-next" onclick="langkahBerikutnya()">Lanjut Soal Berikut ></button>`;
+            
+            fbBox.innerHTML = htmlFeedback;
+            fbBox.className = 'feedback-container';
+        }
+
+        function langkahBerikutnya() {
+            indeksSoal++;
+            if (indeksSoal < databaseHots.length) {
+                renderHalamanSoal();
+            } else {
+                tampilkanPapanSkorAkhir();
+            }
+        }
+
+        function tampilkanPapanSkorAkhir() {
+            document.getElementById('arena-panel').classList.add('hide');
+            document.getElementById('result-panel').classList.remove('hide');
+            document.getElementById('final-score').innerText = skorPoin;
+
+            let kalimatAnalisis = "";
+            if (skorPoin >= 90) {
+                kalimatAnalisis = "Luar Biasa! Anda memiliki ketajaman analisis level expert. Pemahaman Anda mengenai arsitektur, role mapping, dan prinsip dasar asesmen daring Modul 7 sudah matang sempurna. Prediksi Nilai UAS: A.";
+            } else if (skorPoin >= 70) {
+                kalimatAnalisis = "Hasil yang Bagus. Anda sudah mampu mengidentifikasi skenario kendala dan blueprint pengerjaan instrumen evaluasi. Sedikit ketelitian pada aspek manajemen keamanan sistem akan membuat Anda meraih nilai maksimal.";
+            } else {
+                kalimatAnalisis = "Nilai belum aman untuk kelulusan mata kuliah. Silakan pelajari kembali materi di atas terkait fungsi pokok kisi-kisi (blueprint) serta pembatasan hak akses (role), karena bagian itu memegang porsi soal terbesar di ujian.";
+            }
+
+            document.getElementById('evaluation-text').innerText = kalimatAnalisis;
+        }
+
+        function ulangiUjian() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>

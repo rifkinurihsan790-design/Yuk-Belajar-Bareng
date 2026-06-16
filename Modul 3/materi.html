@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ringkasan Inovasi Pembelajaran UT</title>
+    <style>
+        /* --- RESET & BASE STYLE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            overflow-x: hidden;
+        }
+
+        /* --- ANIMASI MASUK (SPLASH SCREEN) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle, #1f293d 0%, #0d1117 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+        }
+        .logo-box {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #58a6ff;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+        .sub-logo {
+            color: #8b949e;
+            font-size: 1rem;
+            margin-top: 10px;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards 1.2s;
+        }
+        .loader {
+            width: 150px;
+            height: 3px;
+            background-color: #21262d;
+            margin-top: 30px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loader::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            height: 100%;
+            width: 0;
+            background-color: #58a6ff;
+            animation: loadProgress 2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards 0.3s;
+        }
+
+        /* --- MAIN CONTENT (DASHBOARD) --- */
+        #main-content {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 1s ease 0.8s;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid #21262d;
+            margin-bottom: 2rem;
+        }
+        header h1 {
+            color: #f0f6fc;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+        header p {
+            color: #8b949e;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #58a6ff;
+        }
+        .card h2 {
+            color: #58a6ff;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #58a6ff;
+            padding-left: 10px;
+        }
+        .card ul {
+            list-style-position: inside;
+            line-height: 1.8;
+        }
+        .card ul li strong {
+            color: #f0f6fc;
+        }
+
+        /* --- KEYFRAMES ANIMASI --- */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes loadProgress {
+            to { width: 100%; }
+        }
+
+        /* STATE PERUBAHAN SETELAH LOADING SELESAI */
+        body.loaded #splash-screen {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        body.loaded #main-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="logo-box">TPEN4406</div>
+        <div class="sub-logo">Inovasi Pembelajaran • Modul 3</div>
+        <div class="loader"></div>
+    </div>
+
+    <main id="main-content">
+        <header>
+            <h1>Rangkuman Media Belajar Mandiri</h1>
+            <p>Persiapan Ujian Akhir Semester Universitas Terbuka</p>
+        </header>
+
+        <div class="grid-container">
+            <div class="card">
+                <h2>1. Karakteristik Inovasi (Everett M. Rogers)</h2>
+                <ul>
+                    <li><strong>Relative Advantage:</strong> Nilai tambah keuntungan dari sistem lama.</li>
+                    <li><strong>Compatibility:</strong> Kesesuaian nilai adat, budaya, & kebutuhan lokal.</li>
+                    <li><strong>Complexity:</strong> Tingkat kerumitan operasional bagi pengguna baru.</li>
+                    <li><strong>Trialability:</strong> Kebebasan menguji coba sebelum implementasi massal.</li>
+                    <li><strong>Observability:</strong> Hasil nyata yang langsung terlihat secara visual.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>2. Paradigma Masyarakat Abad 21</h2>
+                <ul>
+                    <li><strong>Knowledge-Based Economy:</strong> Transisi ekonomi dari industri fisik ke pengelolaan informasi cerdas.</li>
+                    <li><strong>Ketergantungan TIK:</strong> Integrasi mutlak teknologi pada setiap elemen ekosistem sosial.</li>
+                    <li><strong>Ilmu Converging:</strong> Meleburnya sekat disiplin ilmu kaku menjadi pembelajaran holistik.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>3. Efek & Pergeseran Pembelajaran (Konstruktivisme)</h2>
+                <ul>
+                    <li><strong>Student-Centered:</strong> Siswa menjadi subjek aktif pembuat konsep ilmu.</li>
+                    <li><strong>Kompetensi Baru:</strong> Berfokus tinggi pada penalaran kritis, kolaborasi global, & literasi digital.</li>
+                    <li><strong>Asesmen Otentik:</strong> Evaluasi menggunakan demonstrasi kecakapan nyata, bukan ujian hafalan tekstual.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Trigger transisi otomatis setelah loading animasi bar selesai (2.5 Detik)
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 2500);
+        });
+    </script>
+</body>
+</html>

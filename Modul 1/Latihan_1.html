@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerdas Cermat Inovasi - TPEN4406</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --dark-bg: #050a18;
+            --card-bg: #0f172a;
+            --text-light: #f8fafc;
+            --accent: #f43f5e;
+            --correct: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- ANIMASI BACKGROUND --- */
+        .bg-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(50px);
+            animation: move 10s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-50%, -50%); }
+            to { transform: translate(50%, 50%); }
+        }
+
+        /* --- SPLASH SCREEN (ANIMASI MASUK) --- */
+        #splash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: 0.8s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+
+        .splash-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary);
+            opacity: 0;
+            transform: scale(0.8);
+            animation: fadeInScale 1s forwards 0.5s;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .loading-fill {
+            width: 0;
+            height: 100%;
+            background: var(--primary);
+            animation: fillProgress 2s forwards 0.5s;
+        }
+
+        /* --- KUIS CONTAINER --- */
+        #quiz-container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            display: none; /* Muncul setelah splash */
+            transform: translateY(20px);
+            transition: 0.5s;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        #progress-text {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        #timer-fill {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+
+        #question-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option {
+            background: rgba(255,255,255,0.03);
+            border: 2px solid rgba(255,255,255,0.1);
+            padding: 18px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            background: rgba(0, 242, 254, 0.05);
+            border-color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .option.correct { background: var(--correct); border-color: var(--correct); color: white; }
+        .option.wrong { background: var(--accent); border-color: var(--accent); color: white; }
+
+        /* --- HASIL AKHIR --- */
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border: 5px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0 auto 30px;
+            box-shadow: 0 0 30px var(--primary);
+        }
+
+        .btn-restart {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: var(--dark-bg);
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .btn-restart:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--primary); }
+
+        /* --- ANIMASI --- */
+        @keyframes fadeInScale {
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fillProgress {
+            to { width: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div id="splash">
+        <div class="splash-title">TPEN4406</div>
+        <p style="letter-spacing: 5px; color: var(--text-muted); margin-top: 10px;">CERDAS CERMAT</p>
+        <div class="loading-bar">
+            <div class="loading-fill"></div>
+        </div>
+    </div>
+
+    <div id="quiz-container">
+        <div class="quiz-header">
+            <div id="progress-text">SOAL 1 / 10</div>
+            <div id="score-display"><i class="fas fa-trophy" style="color: gold;"></i> Skor: 0</div>
+        </div>
+        
+        <div class="timer-bar">
+            <div id="timer-fill"></div>
+        </div>
+
+        <div id="quiz-content">
+            <p id="question-text">Memuat pertanyaan...</p>
+            <div class="options-grid" id="options-container">
+                </div>
+        </div>
+
+        <div id="result-screen">
+            <h2 style="font-size: 2rem; margin-bottom: 20px;">HASIL AKHIR</h2>
+            <div class="score-circle" id="final-score">0</div>
+            <p id="result-message">Terus belajar! Modul 1 adalah fondasi penting.</p>
+            <button class="btn-restart" onclick="location.reload()">COBA LAGI</button>
+        </div>
+    </div>
+
+    <script>
+        // DATA SOAL (Berdasarkan Modul 1 TPEN4406)
+        const quizData = [
+            {
+                q: "Menurut Everett Rogers, karakteristik inovasi yang menilai sejauh mana inovasi dianggap lebih baik dari ide sebelumnya adalah...",
+                a: "Keunggulan Relatif (Relative Advantage)",
+                options: ["Kompatibilitas", "Keunggulan Relatif (Relative Advantage)", "Kerumitan", "Observabilitas"]
+            },
+            {
+                q: "Tingkat keselarasan inovasi dengan nilai-nilai, pengalaman masa lalu, dan kebutuhan pengadopsi disebut...",
+                a: "Kompatibilitas",
+                options: ["Triabilitas", "Kompatibilitas", "Kompleksitas", "Relativitas"]
+            },
+            {
+                q: "Mengapa 'Complexity' (Kerumitan) berhubungan negatif dengan kecepatan adopsi inovasi?",
+                a: "Semakin sulit dipahami, semakin lambat orang mengadopsinya",
+                options: ["Semakin sulit dipahami, semakin cepat orang mengadopsinya", "Kerumitan membuat orang tertantang", "Semakin sulit dipahami, semakin lambat orang mengadopsinya", "Kerumitan tidak berpengaruh pada adopsi"]
+            },
+            {
+                q: "Atribut inovasi yang memungkinkan seseorang mencoba inovasi dalam skala kecil sebelum mengadopsi penuh adalah...",
+                a: "Triabilitas (Trialability)",
+                options: ["Observabilitas", "Triabilitas (Trialability)", "Kompatibilitas", "Konektivitas"]
+            },
+            {
+                q: "Konektivisme menurut George Siemens menekankan bahwa pembelajaran di era digital terjadi melalui...",
+                a: "Jaringan (Network) informasi",
+                options: ["Menghafal buku teks", "Jaringan (Network) informasi", "Instruksi guru satu arah", "Latihan soal berulang-ulang"]
+            },
+            {
+                q: "Dalam teori Konektivisme, kemampuan untuk melihat hubungan antara berbagai bidang, ide, dan konsep disebut sebagai...",
+                a: "Core skill pembelajaran modern",
+                options: ["Keterampilan menghafal", "Core skill pembelajaran modern", "Keterampilan mengetik", "Keterampilan teknis"]
+            },
+            {
+                q: "Berikut adalah 4 aktivitas utama dalam pembelajaran digital, kecuali...",
+                a: "Eliminasi",
+                options: ["Agregasi", "Relasi", "Refleksi", "Eliminasi"]
+            },
+            {
+                q: "Sejauh mana hasil penggunaan inovasi dapat dilihat oleh orang lain disebut atribut...",
+                a: "Observabilitas",
+                options: ["Kompatibilitas", "Triabilitas", "Observabilitas", "Kompleksitas"]
+            },
+            {
+                q: "Inovasi pembelajaran bertujuan untuk meningkatkan empat hal berikut, kecuali...",
+                a: "Biaya operasional",
+                options: ["Kualitas", "Efisiensi", "Relevansi", "Biaya operasional"]
+            },
+            {
+                q: "Ciri utama dari pembelajaran digital adalah adanya kemandirian dan...",
+                a: "Kolaborasi",
+                options: ["Individualisme ekstrem", "Kolaborasi", "Ketergantungan penuh pada guru", "Sistem tertutup"]
+            }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let canClick = true;
+
+        // Hilangkan Splash Screen dan munculkan Kuis
+        setTimeout(() => {
+            document.getElementById('splash').style.transform = 'translateY(-100%)';
+            document.getElementById('quiz-container').style.display = 'block';
+            loadQuestion();
+        }, 3000);
+
+        function loadQuestion() {
+            canClick = true;
+            const data = quizData[currentIdx];
+            document.getElementById('progress-text').innerText = `SOAL ${currentIdx + 1} / ${quizData.length}`;
+            document.getElementById('question-text').innerText = data.q;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            data.options.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.innerHTML = `<i class="far fa-circle" style="margin-right: 15px;"></i> ${opt}`;
+                div.onclick = () => checkAnswer(div, opt);
+                optionsContainer.appendChild(div);
+            });
+        }
+
+        function checkAnswer(element, choice) {
+            if (!canClick) return;
+            canClick = false;
+
+            const correct = quizData[currentIdx].a;
+            if (choice === correct) {
+                score += 10;
+                element.classList.add('correct');
+                element.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 15px;"></i> ${choice}`;
+            } else {
+                element.classList.add('wrong');
+                element.innerHTML = `<i class="fas fa-times-circle" style="margin-right: 15px;"></i> ${choice}`;
+                // Tunjukkan jawaban yang benar
+                Array.from(document.getElementsByClassName('option')).forEach(optDiv => {
+                    if (optDiv.innerText.trim() === correct) {
+                        optDiv.classList.add('correct');
+                    }
+                });
+            }
+
+            document.getElementById('score-display').innerHTML = `<i class="fas fa-trophy" style="color: gold;"></i> Skor: ${score}`;
+
+            setTimeout(() => {
+                currentIdx++;
+                if (currentIdx < quizData.length) {
+                    loadQuestion();
+                } else {
+                    showResult();
+                }
+            }, 1500);
+        }
+
+        function showResult() {
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('progress-text').style.display = 'none';
+            document.getElementById('timer-fill').parentElement.style.display = 'none';
+            
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+
+            let msg = "";
+            if (score >= 80) msg = "Luar Biasa! Anda siap menghadapi UAS UT!";
+            else if (score >= 60) msg = "Bagus! Sedikit lagi penguasaan sempurna.";
+            else msg = "Ayo baca lagi Modul 1 agar fondasi Inovasi Anda kuat!";
+            
+            document.getElementById('result-message').innerText = msg;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inovasi Pembelajaran - TPEN4406</title>
+    <style>
+        /* --- RESET & ROOT VARIABLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        :root {
+            --bg-dark: #0f172a;
+            --card-dark: #1e293b;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* --- 1. ANIMASI MASUK (SPLASH SCREEN INTRO) --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1e1b4b, var(--bg-dark));
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOutContainer 1s ease-in-out 3s forwards;
+        }
+
+        .intro-box {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
+        }
+
+        .intro-title {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .intro-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-blue));
+            animation: loadProgress 2.2s cubic-bezier(0.1, 0.5, 0.1, 1) 0.7s forwards;
+        }
+
+        /* --- 2. MAIN CONTENT LAYOUT --- */
+        #main-content {
+            opacity: 0;
+            animation: fadeInContent 1s ease-out 3.5s forwards;
+            min-height: 100vh;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* --- 3. NEUMORPHIC / GLOW CARD DESIGN --- */
+        .card {
+            background-color: var(--card-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(6, 182, 212, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 30px -15px rgba(6, 182, 212, 0.3);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* --- KEYFRAMES ANIMASI --- */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes loadProgress {
+            to { width: 100%; }
+        }
+        @keyframes fadeOutContainer {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        @keyframes fadeInContent {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <div class="intro-box">
+            <h1 class="intro-title">TPEN4406</h1>
+            <p class="intro-subtitle">Inovasi Pembelajaran</p>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <header>
+            <h1>Rangkuman Modul 1</h1>
+            <p>PERSAPAN UJIAN AKHIR SEMESTER UNIVERSITAS TERBUKA</p>
+        </header>
+
+        <main class="grid-container">
+            <div class="card">
+                <span class="badge">Atribut Rogers</span>
+                <h3>Keunggulan Relatif</h3>
+                <p>Sejauh mana ide atau teknologi instruksional baru memberikan efektivitas, efisiensi, dan nilai tambah yang lebih konkret dibandingkan metode pembelajaran konvensional konvensional.</p>
+            </div>
+
+            <div class="card">
+                <span class="badge">Atribut Rogers</span>
+                <h3>Kesesuaian (Compatibility)</h3>
+                <p>Kesesuaian inovasi terhadap nilai-nilai yang dianut pengajar, kebutuhan kurikulum, norma kultur sekolah, serta kesiapan karakteristik latar belakang peserta didik.</p>
+            </div>
+
+            <div class="card">
+                <span class="badge">Atribut Rogers</span>
+                <h3>Kerumitan (Complexity)</h3>
+                <p>Tingkat kompleksitas operasional instrumen teknologi baru. Semakin rumit desain sistem integrasi instruksionalnya, potensi resistensi adopsi inovasi akan semakin meninggi.</p>
+            </div>
+
+            <div class="card">
+                <span class="badge">Atribut Rogers</span>
+                <h3>Akses Uji Coba (Trialability)</h3>
+                <p>Tersedianya ruang eksperimen bagi pengguna instruksional untuk menguji fitur inovasi dalam lingkup terbatas tanpa risiko sistemik sebelum implementasi penuh.</p>
+            </div>
+
+            <div class="card">
+                <span class="badge">Atribut Rogers</span>
+                <h3>Dapat Diamati (Observability)</h3>
+                <p>Kemudahan hasil capaian performa akademik atau kemudahan pengelolaan kelas paska-inovasi untuk dilihat, dievaluasi, dan ditiru secara langsung oleh rekan sejawat.</p>
+            </div>
+
+            <div class="card" style="border-left: 3px solid var(--accent-cyan);">
+                <span class="badge" style="background:rgba(59, 130, 246, 0.2); color: var(--accent-blue);">Teori Kontemporer</span>
+                <h3>Konektivisme (Connectivism)</h3>
+                <p>Teori pembelajaran digital utama yang menekankan bahwa pengetahuan bersumber dari jejaring informasi (*networks*). Poin esensialnya adalah keaktifan murid mengagregasi informasi, membangun relasi konseptual, melakukan refleksi, dan berkolaborasi secara luas.</p>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

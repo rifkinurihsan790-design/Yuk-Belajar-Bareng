@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul 8: Difusi Inovasi Pendidikan Dasar - TPEN4406</title>
+    <style>
+        :root {
+            --bg-dark: #060913;
+            --bg-card: #0d1527;
+            --primary: #00f2fe;
+            --secondary: #9d4edd;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --neon-glow: 0 0 20px rgba(0, 242, 254, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ==========================================================================
+           1. ANIMASI INTRO SCREEN
+           ========================================================================== */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #0c102b 0%, #03050d 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .intro-container {
+            text-align: center;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        .cyber-brain {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: floatUp 1.5s ease-out infinite alternate;
+            display: inline-block;
+        }
+
+        .intro-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .intro-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
+        }
+
+        .btn-enter {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            padding: 16px 40px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-enter:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 50px rgba(0, 242, 254, 0.7), 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+
+        /* --- KEYFRAMES INTRO --- */
+        @keyframes floatUp {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-12px); }
+        }
+        @keyframes pulseGlow {
+            from { filter: drop-shadow(0 0 5px rgba(0,242,254,0.1)); }
+            to { filter: drop-shadow(0 0 25px rgba(0,242,254,0.3)); }
+        }
+
+        /* ==========================================================================
+           2. MAIN CONTENT AREA (HALAMAN UTAMA)
+           ========================================================================== */
+        #main-content {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out 0.2s, transform 1s ease-out 0.2s;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header Dashboard */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .badge-uas {
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: var(--neon-glow);
+        }
+
+        header h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        /* Card Section Layout */
+        .card-section {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card-section:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 242, 254, 0.2);
+        }
+
+        .card-section h2 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+            padding-bottom: 10px;
+        }
+
+        .card-section h2 span {
+            font-size: 1.8rem;
+        }
+
+        /* List & Typography */
+        p.desc {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+
+        .pilar-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .pilar-list li {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary);
+            line-height: 1.6;
+        }
+
+        .pilar-list strong {
+            color: #ffffff;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Grid System untuk Perbandingan */
+        .grid-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-two { grid-template-columns: 1fr; }
+        }
+
+        .sub-card {
+            background: rgba(255,255,255,0.01);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        .sub-card h3 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        blockquote {
+            background: rgba(157, 78, 221, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 12px 16px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #d8b4fe;
+            font-style: italic;
+        }
+
+        /* Atribut Grid */
+        .atribut-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .atribut-item {
+            background: rgba(255,255,255,0.02);
+            padding: 20px;
+            border-radius: 12px;
+            border-top: 3px solid var(--primary);
+        }
+
+        .atribut-item h3 {
+            color: var(--primary);
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+        }
+
+        /* Warning Banner */
+        .warning-box {
+            background: rgba(244, 63, 94, 0.08);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            border-left: 5px solid #f43f5e;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .warning-box h3 {
+            color: #f43f5e;
+            margin-bottom: 10px;
+        }
+
+        /* Footer Utilities */
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 20px;
+        }
+
+        /* Kelas Pemicu Transisi Aktif */
+        .fade-out-intro {
+            opacity: 0 !important;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .show-content {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* Print Optimization (Abaikan gaya gelap saat dicetak ke PDF) */
+        @media print {
+            body { background: #fff; color: #000; }
+            .card-section { background: #fff; color: #000; border: 1px solid #ccc; box-shadow: none; page-break-inside: avoid; }
+            #intro-screen { display: none !important; }
+            #main-content { opacity: 1 !important; transform: none !important; }
+            .card-section h2, .atribut-item h3 { color: #000; border-bottom: 2px solid #000; }
+            li, .sub-card, blockquote { background: #f5f5f5 !important; color: #000 !important; border-left: 4px solid #000 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================================================
+       HALAMAN INTRO ANIMASI (NEON CYBER ENTER)
+       ========================================================================== -->
+    <div id="intro-screen">
+        <div class="intro-container">
+            <div class="cyber-brain">💡</div>
+            <div class="intro-title">Difusi Inovasi</div>
+            <div class="intro-subtitle">Sistem Ringkasan Akademik TPEN4406 - Modul 8</div>
+            <button class="btn-enter" onclick="aksesDashboard()">Buka Materi SKS</button>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       HALAMAN ISI MATERI UTAMA
+       ========================================================================== -->
+    <div id="main-content">
+        <header>
+            <div class="badge-uas">Akurasi Kisi-Kisi 90% Keluar UAS</div>
+            <h1>Rangkuman Komprehensif TPEN4406</h1>
+            <p>Modul 8: Difusi Inovasi Pendidikan Dasar (Versi Universitas Terbuka)</p>
+        </header>
+
+        <!-- BAGIAN 1 -->
+        <div class="card-section">
+            <h2><span>🎯</span> I. Esensi, Kontribusi, dan Misi Utama Difusi Inovasi</h2>
+            <p class="desc">Difusi inovasi dalam dunia pendidikan (mengacu pada teori dasar Everett M. Rogers) bukan sekadar proses teknis penyebaran ide baru, melainkan sebuah gerakan perubahan sosial budaya yang membawa misi demokratisasi instruksional.</p>
+            
+            <ul class="pilar-list">
+                <li>
+                    <strong>1. Dari Terbatas bagi Elite Menjadi Demokratis dan Egaliter</strong>
+                    Mengubah peta aksesibilitas inovasi pendidikan. Inovasi yang awalnya eksklusif hanya dapat dinikmati kalangan tertentu/elite, dirancang agar menyebar merata, murah, dan dapat dijangkau oleh semua lapisan masyarakat tanpa memandang kasta sosial-ekonomi.
+                </li>
+                <li>
+                    <strong>2. Dari Berat Sebelah dalam Peningkatan Kemampuan Pribadi Menjadi Seimbang</strong>
+                    Menjamin bahwa difusi tidak hanya mendongkrak aspek kognitif satu individu secara parsial, melainkan menciptakan keseimbangan kualitas sumber daya manusia (SDM) secara menyeluruh—mencakup kompetensi pendidik, pembaruan kurikulum, dan metode pembelajaran.
+                </li>
+                <li>
+                    <strong>3. Dari Berfokus pada Perubahan Substansi Menjadi Merambah ke Aspek Metodologi</strong>
+                    Inovasi tidak lagi sekadar mengganti "apa yang diajarkan" (isi/konten materi), tetapi melakukan revolusi pada "bagaimana cara mengajarkannya" (pendekatan kooperatif, kolaboratif, dan pemanfaatan media).
+                </li>
+            </ul>
+        </div>
+
+        <!-- BAGIAN 2 -->
+        <div class="card-section">
+            <h2><span>📊</span> II. Klasifikasi Tingkatan Inovasi (Levels of Innovation)</h2>
+            <p class="desc">Dalam proses difusi, perubahan atau produk inovasi yang diadopsi di institusi pendidikan dasar dikategorikan berdasarkan skala dan dampak perubahannya:</p>
+            
+            <div class="grid-two">
+                <div class="sub-card">
+                    <h3>Incremental Innovation (Inovasi Bertahap)</h3>
+                    <p style="color: #cbd5e1; line-height: 1.5;">Perubahan yang terjadi dalam skala kecil atau minor. Melakukan aktivitas dengan cara lama yang sama tetapi dimodifikasi sedikit agar hasilnya lebih baik.</p>
+                    <blockquote><strong>Contoh Kontekstual:</strong> Jika sebelumnya lembar tes/ujian dinilai mutlak secara mandiri oleh guru, diubah metodenya menjadi peserta didik berpasangan untuk saling menilai dan bertukar masukan (peer-assessment).</blockquote>
+                </div>
+                <div class="sub-card">
+                    <h3>Radical Innovation (Inovasi Radikal)</h3>
+                    <p style="color: #cbd5e1; line-height: 1.5;">Perubahan besar yang mendasar dan sistemik, meruntuhkan struktur konvensional yang lama, dan menggantinya dengan ekosistem yang sepenuhnya baru.</p>
+                    <blockquote><strong>Contoh Kontekstual:</strong> Peralihan total dari kelas tatap muka fisik tradisional menuju sistem sekolah jarak jauh (distance learning) berbasis platform digital interaktif secara penuh.</blockquote>
+                </div>
+            </div>
+        </div>
+
+        <!-- BAGIAN 3 -->
+        <div class="card-section">
+            <h2><span>🛠</span> III. Model Inovasi & Implementasi di Pendidikan Dasar</h2>
+            <p class="desc">Difusi inovasi didesain untuk menyelesaikan empat pilar masalah pendidikan nasional: <strong>Pemerataan Pendidikan, Peningkatan Mutu, Efisiensi, dan Efektivitas</strong>. Berikut adalah model implementasi riil di lapangan:</p>
+            
+            <ul class="pilar-list">
+                <li>
+                    <strong>Pembelajaran Jarak Jauh (PJJ)</strong>
+                    Inovasi untuk mengatasi hambatan geografis dan ruang, memperluas daya tampung akses pendidikan bagi anak-anak di daerah terpencil atau wilayah 3T.
+                </li>
+                <li>
+                    <strong>Manajemen Berbasis Sekolah (MBS)</strong>
+                    Inovasi dalam aspek tata kelola (governance) yang memberikan otonomisasi dan fleksibilitas lebih besar kepada pihak sekolah untuk mengelola sumber dayanya sendiri sesuai karakteristik lokal.
+                </li>
+                <li>
+                    <strong>PAKEM (Pembelajaran Aktif, Kreatif, Efektif, dan Menyenangkan)</strong>
+                    Inovasi metodologi pembelajaran di kelas dasar yang menggeser peran guru sebagai satu-satunya pusat informasi (teacher-centered) menjadi fasilitator bagi keaktifan siswa (student-centered).
+                </li>
+            </ul>
+        </div>
+
+        <!-- BAGIAN 4 -->
+        <div class="card-section">
+            <h2><span>🔄</span> IV. Proses Adopsi Inovasi & Karakteristik Adopter</h2>
+            <p class="desc">Proses adopsi adalah keputusan mental yang dilalui seseorang mulai dari pertama kali mendengar adanya inovasi hingga memutuskan untuk menerimanya atau menolaknya.</p>
+            
+            <h3 style="color: #fff; margin-bottom: 12px; font-size: 1.2rem;">A. Tahapan Proses Keputusan Inovasi (5 Tahap Rogers)</h3>
+            <div class="pilar-list" style="margin-bottom: 30px;">
+                <div style="background: rgba(255,255,255,0.02); padding: 12px 18px; border-radius: 8px; border-left: 3px solid var(--primary);"><strong>1. Tahap Pengetahuan (Knowledge):</strong> Individu menyadari keberadaan inovasi dan memahami cara fungsinya.</div>
+                <div style="background: rgba(255,255,255,0.02); padding: 12px 18px; border-radius: 8px; border-left: 3px solid var(--primary);"><strong>2. Tahap Persuasif (Persuasion):</strong> Individu membentuk sikap menyukai atau tidak menyukai terhadap inovasi tersebut.</div>
+                <div style="background: rgba(255,255,255,0.02); padding: 12px 18px; border-radius: 8px; border-left: 3px solid var(--primary);"><strong>3. Tahap Keputusan (Decision):</strong> Individu melakukan aktivitas yang mengarah pada pilihan untuk mengadopsi atau menolak inovasi.</div>
+                <div style="background: rgba(255,255,255,0.02); padding: 12px 18px; border-radius: 8px; border-left: 3px solid var(--primary);"><strong>4. Tahap Implementasi (Implementation):</strong> Inovasi mulai digunakan secara praktis dalam sistem kerja.</div>
+                <div style="background: rgba(255,255,255,0.02); padding: 12px 18px; border-radius: 8px; border-left: 3px solid var(--primary);"><strong>5. Tahap Konfirmasi (Confirmation):</strong> Individu mencari penguatan atas keputusan inovasi yang telah diambilnya.</div>
+            </div>
+
+            <h3 style="color: #fff; margin-bottom: 15px; font-size: 1.2rem;">B. Karakteristik Atribut Inovasi yang Mempengaruhi Kecepatan Adopsi</h3>
+            <div class="atribut-grid">
+                <div class="atribut-item">
+                    <h3>Keuntungan Relatif</h3>
+                    <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5;">Sejauh mana inovasi dinilai lebih baik dan menguntungkan daripada metode yang digunakan sebelumnya.</p>
+                </div>
+                <div class="atribut-item">
+                    <h3>Kompatibilitas</h3>
+                    <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5;">Tingkat kesesuaian inovasi dengan nilai-nilai budaya, pengalaman masa lalu, dan kebutuhan mendesak para adopter.</p>
+                </div>
+                <div class="atribut-item">
+                    <h3>Kompleksitas</h3>
+                    <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5;">Tingkat kesulitan untuk memahami dan menggunakan inovasi tersebut. Semakin rumit, adopsi berjalan lambat.</p>
+                </div>
+                <div class="atribut-item">
+                    <h3>Trialabilitas</h3>
+                    <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5;">Sejauh mana inovasi dapat diuji coba terlebih dahulu dalam skala kecil sebelum diadopsi secara massal.</p>
+                </div>
+                <div class="atribut-item">
+                    <h3>Observabilitas</h3>
+                    <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5;">Sejauh mana hasil nyata dari penerapan inovasi tersebut dapat dilihat dengan jelas oleh orang lain.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BAGIAN 5 -->
+        <div class="card-section">
+            <h2><span>⚠️</span> V. Hambatan Utama dalam Difusi Inovasi Pendidikan</h2>
+            <p class="desc">Proses difusi inovasi di tingkat pendidikan dasar sering kali mengalami resistensi (penolakan) struktural maupun kultural:</p>
+            
+            <div class="warning-box">
+                <h3>1. Faktor Psikologis (Resistensi Individu)</h3>
+                <p style="color: #e2e8f0; line-height: 1.5; font-size: 0.95rem;">Adanya rasa tidak aman (insecurity) dari kalangan pendidik senior, kecemasan terhadap perubahan skema beban kerja baru, atau rendahnya tingkat literasi teknologi bawaan.</p>
+            </div>
+            <div class="warning-box">
+                <h3>2. Faktor Infrastruktur & Geografis</h3>
+                <p style="color: #e2e8f0; line-height: 1.5; font-size: 0.95rem;">Ketimpangan fasilitas fisik antar-sekolah, keterbatasan ketersediaan alat peraga modern, dan kendala kestabilan jaringan komunikasi di wilayah pinggiran.</p>
+            </div>
+            <div class="warning-box">
+                <h3>3. Faktor Sistemik / Birokrasi</h3>
+                <p style="color: #e2e8f0; line-height: 1.5; font-size: 0.95rem;">Regulasi birokrasi kedinasan yang terlalu kaku atau kurangnya pelatihan (up-skilling) berkala yang adaptif bagi SDM pelaksana lapangan setelah inovasi diluncurkan.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>Materi Pembelajaran Jarak Jauh Mandiri UT - Sukses UAS TPEN4406</p>
+        </footer>
+    </div>
+
+    <!-- ==========================================================================
+       JAVASCRIPT DRIVER CONTROLLER
+       ========================================================================== -->
+    <script>
+        function aksesDashboard() {
+            const intro = document.getElementById('intro-screen');
+            const konten = document.getElementById('main-content');
+            
+            // Jalankan transisi fade-out halaman intro
+            intro.classList.add('fade-out-intro');
+            
+            // Tampilkan konten utama secara smooth
+            konten.classList.add('show-content');
+            
+            // Hapus elemen intro dari dokumen setelah animasi selesai agar hemat memori
+            setTimeout(() => {
+                intro.remove();
+            }, 800);
+        }
+    </script>
+</body>
+</html>

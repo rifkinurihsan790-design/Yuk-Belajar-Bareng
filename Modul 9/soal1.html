@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Cerdas Cermat Modul 9 - High Contrast</title>
+    <style>
+        :root { 
+            --neon: #39ff14; /* Warna hijau neon yang sangat kontras di latar gelap */
+            --bg: #05070a; 
+            --card: #151921; 
+            --text-main: #ffffff; 
+        }
+        body { 
+            background: var(--bg); 
+            color: var(--text-main); 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+        }
+
+        .container { 
+            width: 90%; 
+            max-width: 800px; 
+            background: var(--card); 
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 3px solid var(--neon); 
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+        }
+
+        h1, #question { 
+            font-weight: 800; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+        }
+
+        .option { 
+            display: block; 
+            width: 100%; 
+            padding: 20px; 
+            margin: 15px 0; 
+            background: #252d3d; 
+            border: 2px solid #4a5568; 
+            color: #ffffff;
+            cursor: pointer; 
+            border-radius: 12px; 
+            font-size: 1.1rem; 
+            font-weight: 600;
+            transition: 0.3s; 
+            text-align: left;
+        }
+
+        .option:hover { 
+            border-color: var(--neon); 
+            background: #323d52; 
+        }
+
+        .correct { background: #065f46 !important; border-color: #34d399 !important; }
+        .wrong { background: #991b1b !important; border-color: #f87171 !important; }
+        
+        #score-board { font-size: 1.8rem; font-weight: bold; color: var(--neon); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="quiz">
+    <div id="score-board">SKOR: <span id="score">0</span></div>
+    <div id="question" style="font-size: 1.5rem; margin-bottom: 20px;">Memuat soal...</div>
+    <div id="options"></div>
+</div>
+
+<script>
+    const quizData = [
+        { q: "Esensi utama inovasi rancangan pembelajaran berbasis TIK adalah...", a: ["Mengganti guru dengan AI", "Transformasi pedagogis melalui integrasi teknologi, materi, dan metode", "Memindahkan buku ke PDF", "Menghilangkan tatap muka", "Beban administratif"], ans: 1 },
+        { q: "Domain TPACK yang mengkaji bagaimana teknologi mengubah representasi konten adalah...", a: ["PCK", "TPK", "TCK", "CK", "PK"], ans: 2 },
+        { q: "Kelemahan guru dalam mengintegrasikan metode diskusi dengan alat digital disebut...", a: ["CK", "TK", "TPK", "TPACK", "PCK"], ans: 2 },
+        { q: "Mengapa pendekatan Tematik Integratif ditekankan di SD?", a: ["Anak SD operasional konkret", "Teknologi hanya untuk tematik", "Guru tidak bisa mengajar terpisah", "Tidak ada laboratorium", "Menghilangkan ujian"], ans: 0 },
+        { q: "Peran TIK paling tepat di tahap awal/pendahuluan RPP adalah...", a: ["Asesmen akhir", "Media pemantik/apersepsi", "Sumber belajar utama", "Hukuman siswa", "Laporan keuangan"], ans: 1 },
+        { q: "Identifikasi kesiapan teknologi siswa disebut...", a: ["Analisis Kurikulum", "Learner Analysis", "Biaya Operasional", "Evaluasi Guru", "Jam Mengajar"], ans: 1 },
+        { q: "Apa maksud dari kriteria 'Immediate Feedback'?", a: ["Nilai bulan depan", "Hasil langsung sesaat setelah kuis", "Tugas tambahan", "Nilai untuk juara saja", "Tanya kepala sekolah"], ans: 1 },
+        { q: "Hambatan utama implementasi TIK adalah...", a: ["Kurang komputer", "Literasi pedagogi digital guru", "Mahal paket data", "Penolakan orang tua", "Kurang jam mengajar"], ans: 1 },
+        { q: "E-portfolio menerapkan prinsip asesmen yang...", a: ["Tradisional", "Formatif & Otentik", "Hafalan", "Tanpa peran siswa", "Hasil akhir saja"], ans: 1 },
+        { q: "Peran utama OER bagi guru adalah...", a: ["Mengubah hak cipta", "Mempermudah akses sumber belajar berkualitas", "Satu-satunya cara", "Pengganti buku teks", "Membatasi materi"], ans: 1 }
+    ];
+
+    let currentQ = 0, score = 0;
+    const qEl = document.getElementById('question'), optEl = document.getElementById('options');
+
+    function loadQ() {
+        const data = quizData[currentQ];
+        qEl.innerText = `${currentQ + 1}. ${data.q}`;
+        optEl.innerHTML = '';
+        data.a.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'option';
+            btn.innerText = opt;
+            btn.onclick = () => check(i, btn);
+            optEl.appendChild(btn);
+        });
+    }
+
+    function check(i, btn) {
+        if(i === quizData[currentQ].ans) {
+            btn.classList.add('correct');
+            score += 10;
+            document.getElementById('score').innerText = score;
+        } else {
+            btn.classList.add('wrong');
+        }
+        setTimeout(() => {
+            currentQ++;
+            if(currentQ < quizData.length) loadQ();
+            else qEl.innerText = "KUIS SELESAI! SKOR AKHIR: " + score;
+        }, 1200);
+    }
+    loadQ();
+</script>
+</body>
+</html>

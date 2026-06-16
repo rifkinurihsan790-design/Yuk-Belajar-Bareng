@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Cerdas Cermat Arena - TPEN4406</title>
+    <style>
+        :root { --neon: #39ff14; --bg: #05070a; --card: #151921; --text: #ffffff; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { width: 95%; max-width: 850px; background: var(--card); padding: 40px; border-radius: 25px; border: 3px solid var(--neon); box-shadow: 0 0 40px rgba(57, 255, 20, 0.2); text-align: center; }
+        h1 { color: var(--neon); font-size: 2.5rem; margin-bottom: 20px; }
+        #score-display { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; }
+        .option-btn { display: block; width: 100%; padding: 18px; margin: 12px 0; background: #252d3d; border: 2px solid #4a5568; color: white; font-size: 1.1rem; font-weight: 600; cursor: pointer; border-radius: 12px; transition: 0.3s; text-align: left; }
+        .option-btn:hover { border-color: var(--neon); background: #323d52; }
+        .correct { background: #065f46 !important; border-color: #34d399 !important; }
+        .wrong { background: #991b1b !important; border-color: #f87171 !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CERDAS CERMAT ARENA</h1>
+        <div id="score-display">SKOR: <span id="score">0</span></div>
+        <div id="question-box" style="font-size: 1.4rem; margin-bottom: 30px; font-weight: bold;">Memuat soal...</div>
+        <div id="options-box"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            { q: "Integrasi TIK yang efektif adalah...", a: ["Mengganti metode tradisional", "Mendukung tujuan pedagogis dan konten", "Fokus utama dibanding materi", "Hanya untuk ujian", "Harus digunakan setiap detik"], ans: 1 },
+            { q: "Tantangan pedagogis terbesar Flipped Classroom adalah...", a: ["Perangkat mahal", "Kemandirian belajar sebelum kelas", "Menghilangkan guru", "Tugas serentak", "Mengganti buku dengan video"], ans: 1 },
+            { q: "Contoh Technological Content Knowledge (TCK) adalah...", a: ["PowerPoint untuk tugas", "Simulasi virtual atom", "Spreadsheet untuk nilai", "Download RPP", "Sosmed untuk pengumuman"], ans: 1 },
+            { q: "Mengapa pemetaan aksesibilitas krusial dalam RPP?", a: ["Membatasi internet", "Menghindari kesenjangan digital", "Harga perangkat", "Mengetahui smartphone terbaru", "Nilai siswa kaya"], ans: 1 },
+            { q: "Mengapa RPP TIK harus mencakup 'evaluasi informasi digital'?", a: ["Internet tanpa batas", "Literasi informasi (memilah info valid)", "Membuat sosmed", "Wajib komputer", "Guru malas menjelaskan"], ans: 1 },
+            { q: "Perbedaan blended learning dengan daring murni adalah...", a: ["Biaya mahal", "Kombinasi tatap muka & daring", "Daring tidak ada tujuan", "Hanya untuk sains", "Daring untuk pendidikan dasar"], ans: 1 },
+            { q: "Manakah penilaian otentik e-portfolio?", a: ["Ujian pilihan ganda", "Koleksi karya proses belajar", "Kecepatan selesai", "Kehadiran", "Kesukaan guru"], ans: 1 },
+            { q: "Strategi harus disesuaikan dengan konten (CK) karena...", a: ["Konten prosedural butuh praktik", "Keinginan siswa", "Satu metode untuk semua", "Tidak perlu belajar materi", "Teknologi menentukan metode"], ans: 0 },
+            { q: "Dampak negatif mengabaikan 'Literasi Pedagogi Digital' adalah...", a: ["Teknologi dangkal tanpa memperkuat kognitif", "Guru dapat bonus", "Siswa senang", "Sekolah terkenal", "Tidak ada dampak"], ans: 0 },
+            { q: "Peran teknologi pada kegiatan penutup RPP?", a: ["Membagikan tugas", "Sarana refleksi digital", "Data pribadi", "Tanpa interaksi", "Tidak perlu"], ans: 1 }
+        ];
+
+        let currentQ = 0, score = 0;
+        const qBox = document.getElementById('question-box');
+        const optBox = document.getElementById('options-box');
+
+        function loadQuestion() {
+            const data = quizData[currentQ];
+            qBox.innerText = `${currentQ + 1}. ${data.q}`;
+            optBox.innerHTML = '';
+            data.a.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(i, btn);
+                optBox.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(i, btn) {
+            if(i === quizData[currentQ].ans) {
+                btn.classList.add('correct');
+                score += 10;
+                document.getElementById('score').innerText = score;
+            } else {
+                btn.classList.add('wrong');
+            }
+            setTimeout(() => {
+                currentQ++;
+                if(currentQ < quizData.length) loadQuestion();
+                else qBox.innerHTML = "KUIS SELESAI!<br>SKOR AKHIR ANDA: " + score + "/100";
+            }, 1000);
+        }
+        loadQuestion();
+    </script>
+</body>
+</html>

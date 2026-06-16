@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Utama - Universitas Terbuka</title>
+    <!-- Google Fonts untuk font yang modern dan clean -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & BASE STYLE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #333333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- NAVBAR --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Logo Placeholder - Sudah disetting agar cantik meski pakai teks sementara */
+        .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #0056b3, #00b4db);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(0, 90, 179, 0.3);
+        }
+
+        .logo-text h1 {
+            font-size: 1.2rem;
+            color: #002d62; /* Biru Gelap Khas UT */
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #0056b3;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            color: #002d62;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* --- COURSES SECTION (MATAKULIAH) --- */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #002d62;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background: #00b4db;
+            margin: 8px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        /* --- CARD STYLE yang Cantik & Elegan --- */
+        .course-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 35px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Variasi dekorasi warna pastel di pojok kartu */
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+        }
+
+        .card-1::before { background: linear-gradient(90deg, #ff9a9e, #fecfef); }
+        .card-2::before { background: linear-gradient(90deg, #a1c4fd, #c2e9fb); }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .course-badge {
+            align-self: flex-start;
+            padding: 6px 12px;
+            background-color: #f0f4f8;
+            color: #0056b3;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .course-card h3 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .course-card p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-learn {
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap 0.2s;
+        }
+
+        .course-card:hover .btn-learn {
+            gap: 14px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: auto;
+            background-color: #ffffff;
+            padding: 25px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR / HEADER -->
+    <header>
+        <div class="navbar">
+            <div class="logo-area">
+                <!-- Jika ada file logo asli, ganti div di bawah ini dengan: <img src="logo-ut.png" alt="Logo UT" style="height:50px;"> -->
+                <div class="logo-placeholder">UT</div>
+                <div class="logo-text">
+                    <h1>UNIVERSITAS TERBUKA</h1>
+                    <p>Making Higher Education Open to All</p>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Beranda</a></li>
+                <li><a href="#">Matakuliah</a></li>
+                <li><a href="#">Kontak</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h2>Ruang Belajar Digital</h2>
+        <p>Akses materi pembelajaran interaktif dan tingkatkan kompetensi Anda secara fleksibel di mana saja dan kapan saja.</p>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-container">
+        <h3 class="section-title">Daftar Mata Kuliah</h3>
+        
+        <div class="course-grid">
+            
+            <!-- KARTU MATAKULIAH 1 -->
+            <div class="course-card card-1">
+                <div>
+                    <div class="course-badge">Mata Kuliah Utama</div>
+                    <h3>Inovasi Pembelajaran</h3>
+                    <p>Eksplorasi strategi, metode baru, dan pemanfaatan teknologi modern untuk menciptakan suasana belajar yang kreatif, efektif, dan menyenangkan bagi siswa.</p>
+                </div>
+                <a href="#" class="btn-learn">Mulai Belajar &rarr;</a>
+            </div>
+
+            <!-- KARTU MATAKULIAH 2 -->
+            <div class="course-card card-2">
+                <div>
+                    <div class="course-badge">Pendidikan Dasar</div>
+                    <h3>Asesmen dalam Pembelajaran SD</h3>
+                    <p>Pelajari teknik penyusunan instrumen penilaian, evaluasi hasil belajar, serta analisis perkembangan akademik siswa sekolah dasar secara objektif.</p>
+                </div>
+                <a href="#" class="btn-learn">Mulai Belajar &rarr;</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Universitas Terbuka. All Rights Reserved. Designed beautifully & simply.</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Arena Cerdas Cermat - TPEN4406</title>
+    <style>
+        /* --- CORE CONFIGURATION & NEON STYLE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        body {
+            background: radial-gradient(circle at center, #0a1128 0%, #020617 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* --- STAGE 1: INTRO SPLASH SCREEN --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #030712;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .pulse-logo {
+            width: 90px;
+            height: 90px;
+            border: 4px solid transparent;
+            border-top-color: #38bdf8;
+            border-bottom-color: #ec4899;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            margin-bottom: 25px;
+        }
+        .splash-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-align: center;
+            background: linear-gradient(to right, #38bdf8, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+        .btn-enter {
+            background: linear-gradient(135deg, #0284c7 0%, #be185d 100%);
+            color: white;
+            border: none;
+            padding: 15px 45px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            transition: 0.3s ease;
+            letter-spacing: 1s;
+        }
+        .btn-enter:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
+        }
+
+        /* --- STAGE 2: ARENA CERDAS CERMAT --- */
+        #arena-container {
+            width: 90%;
+            max-width: 850px;
+            background: rgba(15, 23, 42, 0.75);
+            border: 2px solid #334155;
+            border-radius: 24px;
+            padding: 35px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s ease;
+        }
+        .arena-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #475569;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .badge-soal {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #94a3b8;
+            background: #1e293b;
+            padding: 6px 16px;
+            border-radius: 30px;
+        }
+        .papan-skor {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #38bdf8;
+            background: #0f172a;
+            border: 1px solid #0284c7;
+            padding: 6px 18px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+        .teks-soal {
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: #ffffff;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        /* --- SCROLLABLE MULTIPLE CHOICE BOX --- */
+        .box-pilihan-wrapper {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        /* Desain Scrollbar Minimalis */
+        .box-pilihan-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        .box-pilihan-wrapper::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+        }
+
+        /* --- TOMBOL PILIHAN JAWABAN --- */
+        .opsi-btn {
+            width: 100%;
+            background: #1e293b;
+            border: 1px solid #475569;
+            padding: 16px 22px;
+            text-align: left;
+            font-size: 1.05rem;
+            color: #cbd5e1;
+            border-radius: 14px;
+            cursor: pointer;
+            margin-bottom: 14px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+        }
+        .opsi-btn:hover {
+            background: #293548;
+            border-color: #38bdf8;
+            color: white;
+            transform: translateX(8px);
+        }
+        .opsi-abjad {
+            font-weight: 800;
+            color: #38bdf8;
+            background: #0f172a;
+            padding: 5px 11px;
+            border-radius: 50%;
+            margin-right: 18px;
+        }
+
+        /* --- KONDISI STATIK JAWABAN (BENAR/SALAH) --- */
+        .jawaban-benar {
+            background: linear-gradient(90deg, #065f46 0%, #059669 100%) !important;
+            border-color: #34d399 !important;
+            color: white !important;
+            animation: guncangGlow 0.4s ease;
+        }
+        .jawaban-salah {
+            background: linear-gradient(90deg, #7f1d1d 0%, #dc2626 100%) !important;
+            border-color: #f87171 !important;
+            color: white !important;
+        }
+
+        /* --- STAGE 3: RESULT SCOREBOARD --- */
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+        .angka-skor-besar {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #38bdf8, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 25px 0;
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
+        }
+
+        /* --- LAYOUT ANIMATION ANIMASI --- */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes guncangGlow {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="pulse-logo"></div>
+        <div class="splash-title">TPEN4406: INOVASI PEMBELAJARAN<br><span style="font-size:1.3rem; font-weight:400; color:#94a3b8;">MODUL 5 - GERAKAN PENDIDIKAN TERBUKA</span></div>
+        <button class="btn-enter" onclick="aksesArena()">MULAI KOMPETISI</button>
+    </div>
+
+    <div id="arena-container">
+        <div class="arena-header">
+            <span id="label-nomor" class="badge-soal">MEMUAT SOAL...</span>
+            <div class="papan-skor">SKOR JAWABAN: <span id="skor-live">0</span></div>
+        </div>
+        
+        <div id="teks-soal-box" class="teks-soal">Mengambil data instrumen soal dari server...</div>
+        
+        <div class="box-pilihan-wrapper" id="pilihan-wrapper-box"></div>
+    </div>
+
+    <div id="result-screen">
+        <h2 style="letter-spacing: 2px;">EVALUASI AKHIR SELESAI</h2>
+        <p style="color: #a1a1aa; margin-top: 10px;">Persentase Kelulusan Prediksi UAS Anda:</p>
+        <div class="angka-skor-besar" id="tampilan-skor-akhir">0</div>
+        <button class="btn-enter" onclick="window.location.reload()">REMIDI / ULANGI ARENA</button>
+    </div>
+
+    <script>
+        // WEB AUDIO OSCILLATOR (Membuat bunyi beep cerdas cermat asli tanpa aset eksternal)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        function bunyikanEfek(frekuensi, jenisGelombang, durasi) {
+            let oscillator = audioContext.createOscillator();
+            let gainNode = audioContext.createGain();
+            oscillator.type = jenisGelombang;
+            oscillator.frequency.value = frekuensi;
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            oscillator.start();
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + durasi);
+            oscillator.stop(audioContext.currentTime + durasi);
+        }
+
+        // INTEGRASI DATA 10 SOAL MAHASISWA MODUL 5 (Prediksi 90% keluar)
+        const bankDataSoal = [
+            {
+                pertanyaan: "Konsep filosofis paling mendasar yang mendasari lahirnya Gerakan Pendidikan Terbuka (Open Education Movement) sebagai bentuk inovasi pembelajaran abad ke-21 adalah...",
+                opsiPilihan: [
+                    "Menghapus standarisasi nilai akademik dalam sistem perkuliahan global.",
+                    "Menghilangkan hambatan masuk, biaya, geografis, dan legalitas dalam memperoleh pengetahuan.",
+                    "Mengganti seluruh peran dosen dan tutor dengan kecerdasan buatan secara total.",
+                    "Mewajibkan seluruh perguruan tinggi mengubah modul cetak menjadi video interaktif.",
+                    "Membatasi hak akses materi digital hanya untuk mahasiswa yang terdaftar resmi."
+                ],
+                kunci: 1
+            },
+            {
+                pertanyaan: "Perbedaan yuridis yang paling signifikan antara Open Educational Resources (OER) dengan bahan ajar digital konvensional yang memiliki hak cipta penuh (All Rights Reserved) terletak pada...",
+                opsiPilihan: [
+                    "Validitas isi materi dan tingkat kedalaman analisis akademisnya.",
+                    "Format ekstensi file yang digunakan saat diunggah ke internet.",
+                    "Pemberian izin awal (lisensi terbuka) kepada publik untuk membagikan dan mengubah materi secara legal.",
+                    "Kewajiban pengguna untuk mendaftarkan diri ke lembaga internasional sebelum membaca.",
+                    "Jumlah halaman dan kelengkapan instrumen evaluasi di dalam modul."
+                ],
+                kunci: 2
+            },
+            {
+                pertanyaan: "Dalam kerangka kerja '5R Permissions' terkait pemanfaatan OER yang digagas oleh David Wiley, tindakan mengadopsi bahan ajar asli dengan cara menerjemahkannya ke dalam bahasa daerah atau menyunting isinya agar relevan disebut...",
+                opsiPilihan: ["Retain (Menyimpan)", "Reuse (Menggunakan Kembali)", "Revise (Merevisi)", "Remix (Memadukan)", "Redistribute (Menyebarluaskan)"],
+                kunci: 2
+            },
+            {
+                pertanyaan: "Ketika seorang pengembang kurikulum menggabungkan sebuah infografis materi dari Universitas A dengan video simulasi dari Universitas B untuk menciptakan satu paket unit pembelajaran baru yang utuh, aktivitas 5R yang sedang dilakukan adalah...",
+                opsiPilihan: ["Retain", "Reuse", "Revise", "Remix", "Redistribute"],
+                kunci: 3
+            },
+            {
+                pertanyaan: "Instrumen hukum global yang paling sering digunakan dalam gerakan pendidikan terbuka untuk memberikan lisensi gratis kepada publik, sehingga pencipta tetap memegang hak cipta namun mengizinkan karyanya disalin adalah...",
+                opsiPilihan: ["World Intellectual Property Organization (WIPO)", "Creative Commons (CC)", "Digital Rights Management (DRM)", "Open CourseWare Consortium (OCWC)", "International Standard Book Number (ISBN)"],
+                kunci: 1
+            },
+            {
+                pertanyaan: "Aturan lisensi Creative Commons berkode CC BY-NC memberikan kebebasan kepada mahasiswa atau dosen untuk mendistribusikan dan membuat karya turunan dengan syarat wajib...",
+                opsiPilihan: [
+                    "Melakukan pembayaran royalti setelah penggunaan lebih dari satu tahun.",
+                    "Tidak boleh mengubah isi materi sedikit pun dari dokumen asli.",
+                    "Mencantumkan atribusi pencipta asli dan tidak menggunakannya untuk tujuan komersial.",
+                    "Secepatnya menyebarluaskannya kembali dengan lisensi yang jauh lebih ketat dan tertutup.",
+                    "Menggunakan materi tersebut hanya di dalam lingkungan kelas tatap muka."
+                ],
+                kunci: 2
+            },
+            {
+                pertanyaan: "Sistem Pendidikan Jarak Jauh (PJJ) yang diterapkan oleh Universitas Terbuka memiliki keterkaitan filosofis yang sangat kuat dengan Pendidikan Terbuka. Faktor utama yang mempersatukan kedua konsep ini adalah...",
+                opsiPilihan: [
+                    "Penggunaan teknologi server berspesifikasi tinggi sebagai indikator utama kelulusan.",
+                    "Demokratisasi dan pemerataan akses pendidikan demi menjangkau penyerapan wilayah geografis yang luas.",
+                    "Kebijakan penyeragaman jadwal belajar yang kaku bagi seluruh lapisan masyarakat.",
+                    "Pengurangan interaksi akademik secara total untuk meningkatkan kemandirian mutlak.",
+                    "Kewajiban penggunaan satu metode belajar tunggal tanpa adanya variasi pengayaan."
+                ],
+                kunci: 1
+            },
+            {
+                pertanyaan: "Salah satu produk inovasi pembelajaran digital berskala masif yang lahir dari rahim gerakan pendidikan terbuka, bersifat gratis, tanpa batasan kuota kelas, dan dapat diakses siapa saja di seluruh dunia secara daring adalah...",
+                options: ["LMS Internal Sekolah", "MOOCs (Massive Open Online Courses)", "Synchronous Video Conference Private Room", "Web-based Electronic Portofolio Berbayar", "LAN Intranet"],
+                opsiPilihan: ["LMS Internal Sekolah", "MOOCs (Massive Open Online Courses)", "Synchronous Video Conference Private Room", "Web-based Electronic Portofolio Berbayar", "LAN Intranet"],
+                kunci: 1
+            },
+            {
+                pertanyaan: "Kendala internal terbesar yang sering kali menjadi faktor penentu kegagalan mahasiswa dalam memanfaatkan ekosistem Pendidikan Terbuka dan Jarak Jauh yang sangat fleksibel adalah...",
+                opsiPilihan: [
+                    "Terbatasnya jumlah penyedia kuota internet di pasar lokal.",
+                    "Kurangnya ragam pilihan platform digital yang tersedia di mesin pencari.",
+                    "Lemahnya kemampuan regulasi diri (self-regulated learning) dan motivasi belajar mandiri.",
+                    "Ketatnya sanksi internasional mengenai pelarangan diskusi daring antar mahasiswa.",
+                    "Penolakan total dari industri kerja terhadap semua lulusan berbasis digital."
+                ],
+                kunci: 2
+            },
+            {
+                pertanyaan: "Wujud nyata implementasi komitmen Gerakan Pendidikan Terbuka yang disediakan resmi oleh Universitas Terbuka agar masyarakat luas dapat mengakses materi perkuliahan bermutu tinggi secara gratis adalah...",
+                opsiPilihan: ["Sistem Informasi Akademik (SIA) UT", "Ruang Baca Virtual (RBV) Terproteksi", "UT-Online / Open CourseWare (OCW) UT", "Bahan Ajar Cetak Berbayar", "Aplikasi Ujian Online (UO) Khusus"],
+                kunci: 2
+            }
+        ];
+
+        let indexBerjalan = 0;
+        let totalSkor = 0;
+
+        // FUNGSI KHUSUS TRANSISI ANIMASI MASUK Halaman
+        function aksesArena() {
+            // Bunyi klik cyber intro
+            bunyikanEfek(550, 'sine', 0.1);
+            setTimeout(() => bunyikanEfek(850, 'sine', 0.2), 100);
+
+            // Geser layar splash screen ke atas
+            document.getElementById('splash-screen').style.transform = 'translateY(-100vh)';
+            
+            // Tampilkan wadah permainan utama secara smooth
+            const arena = document.getElementById('arena-container');
+            arena.style.display = 'block';
+            setTimeout(() => {
+                arena.style.opacity = '1';
+                arena.style.transform = 'scale(1)';
+            }, 150);
+
+            gantiSoalArena();
+        }
+
+        // FUNGSI MERENDER SOAL KE DALAM HALAMAN WEB
+        function gantiSoalArena() {
+            if (indexBerjalan >= bankDataSoal.length) {
+                bukaPapanSkorAkhir();
+                return;
+            }
+
+            const dataAktif = bankDataSoal[indexBerjalan];
+            document.getElementById('label-nomor').innerText = `INSTRUMEN EVALUASI: SOAL ${indexBerjalan + 1} / ${bankDataSoal.length}`;
+            document.getElementById('teks-soal-box').innerText = dataAktif.pertanyaan;
+
+            const boxOpsi = document.getElementById('pilihan-wrapper-box');
+            boxOpsi.innerHTML = ''; // bersihkan pilihan soal sebelumnya
+
+            const urutanAbjad = ['A', 'B', 'C', 'D', 'E'];
+            dataAktif.opsiPilihan.forEach((pilihanTeks, indeksPilihan) => {
+                const tombolOpsi = document.createElement('button');
+                tombolOpsi.className = 'opsi-btn';
+                tombolOpsi.innerHTML = `<span class="opsi-abjad">${urutanAbjad[indeksPilihan]}</span> <span style="flex:1;">${pilihanTeks}</span>`;
+                tombolOpsi.onclick = () => validasiAksiJawaban(indeksPilihan, tombolOpsi);
+                boxOpsi.appendChild(tombolOpsi);
+            });
+        }
+
+        // FUNGSI VALIDASI CEK JAWABAN BENAR / SALAH
+        function validasiAksiJawaban(pilihanKlik, elemenTombol) {
+            const indexJawabanBenar = bankDataSoal[indexBerjalan].kunci;
+            const kumpulanTombol = document.querySelectorAll('.opsi-btn');
+
+            // Kunci interaksi agar tidak bisa klik dua kali saat animasi berkedip
+            kumpulanTombol.forEach(btn => btn.disabled = true);
+
+            if (pilihanKlik === indexJawabanBenar) {
+                elemenTombol.classList.add('jawaban-benar');
+                totalSkor += 10;
+                document.getElementById('skor-live').innerText = totalSkor;
+                bunyikanEfek(950, 'sine', 0.25); // Efek suara benar (Melengking tinggi)
+            } else {
+                elemenTombol.classList.add('jawaban-salah');
+                kumpulanTombol[indexJawabanBenar].classList.add('jawaban-benar');
+                bunyikanEfek(180, 'sawtooth', 0.35); // Efek suara salah (Bass berat)
+            }
+
+            // Otomatis pindah ke nomor berikutnya setelah jeda membaca evaluasi 1.6 detik
+            setTimeout(() => {
+                indexBerjalan++;
+                gantiSoalArena();
+            }, 1600);
+        }
+
+        // FUNGSI PAPAN SKOR KELULUSAN AKHIR
+        function bukaPapanSkorAkhir() {
+            document.getElementById('arena-container').style.display = 'none';
+            
+            const screenHasil = document.getElementById('result-screen');
+            screenHasil.style.display = 'block';
+            document.getElementById('tampilan-skor-akhir').innerText = totalSkor;
+
+            // Nada selebrasi kemenangan cerdas cermat
+            bunyikanEfek(523, 'sine', 0.1);
+            setTimeout(() => bunyikanEfek(659, 'sine', 0.1), 100);
+            setTimeout(() => bunyikanEfek(784, 'sine', 0.1), 200);
+            setTimeout(() => bunyikanEfek(1046, 'sine', 0.4), 300);
+        }
+    </script>
+</body>
+</html>

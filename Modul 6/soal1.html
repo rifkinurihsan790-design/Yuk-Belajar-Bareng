@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inovasi Pembelajaran - Modul 6 (Sistem Daring)</title>
+    <style>
+        /* --- DESIGN SYSTEM & VARIABLES --- */
+        :root {
+            --bg-dark: #0a0f1d;
+            --bg-card: #161f38;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* --- 1. ANIMASI MASUK (SPLASH SCREEN) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #111827, #030712);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .intro-box {
+            text-align: center;
+        }
+
+        .glitch-text {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards 0.3s;
+        }
+
+        .typing-text {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            border-right: 2px solid var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            margin: 0 auto;
+            animation: typing 2s steps(30, end) forwards 1s, blink 0.6s step-end infinite;
+        }
+
+        /* --- 2. HALAMAN UTAMA (MAIN CONTENT) --- */
+        #main-content {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: opacity 1.2s ease 0.5s, transform 1.2s ease 0.5s;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            display: none;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .badge {
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #fff;
+            margin: 40px 0 20px 0;
+            padding-left: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* --- 3. KARTU MATERI & KUIS --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--secondary);
+            color: #fff;
+            padding: 6px 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-bottom-left-radius: 16px;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .materi-list {
+            list-style: none;
+        }
+
+        .materi-list li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .materi-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .materi-list li strong {
+            color: #fff;
+        }
+
+        /* --- 4. FITUR KUIS INTERAKTIF & SCROLLABLE OPTIONS --- */
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .question-block {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        /* Pembungkus opsi agar bisa digeser horizontal jika layar penuh/sempit */
+        .options-wrapper {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary) transparent;
+        }
+
+        .options-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        .options-wrapper::-webkit-scrollbar-thumb {
+            background-color: var(--secondary);
+            border-radius: 10px;
+        }
+
+        .option-label {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            margin-right: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 200px;
+            white-space: normal; /* Mengembalikan teks di dalam kotak agar bisa turun ke bawah jika diinginkan */
+        }
+
+        .option-label:hover {
+            background: rgba(0, 242, 254, 0.08);
+            border-color: var(--primary);
+        }
+
+        .option-label input {
+            margin-right: 10px;
+            accent-color: var(--primary);
+        }
+
+        /* Kelas State Hasil Jawaban */
+        .correct-ans {
+            background: rgba(16, 185, 129, 0.2) !important;
+            border-color: var(--accent) !important;
+            color: #fff !important;
+        }
+
+        .wrong-ans {
+            background: rgba(239, 68, 68, 0.2) !important;
+            border-color: var(--danger) !important;
+            color: #fff !important;
+        }
+
+        .explanation {
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--secondary);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .btn-submit {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: #000;
+            font-weight: 700;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: block;
+            margin: 30px auto 0 auto;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        #result-display {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 25px;
+            color: var(--primary);
+            display: none;
+        }
+
+        /* --- KEYFRAMES ANIMASI --- */
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            .glitch-text { font-size: 1.8rem; }
+            .typing-text { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="intro-box">
+            <div class="glitch-text">TPEN4406 UNIVERSITAS TERBUKA</div>
+            <div class="typing-text">Menyiapkan Ringkasan & Kuis Sukses UAS...</div>
+        </div>
+    </div>
+
+    <main id="main-content">
+        <header>
+            <span class="badge">E-Learning & Inovasi Akademik</span>
+            <h1>TPEN4406 / MODUL 6</h1>
+            <p style="color: var(--text-muted)">Sistem Pembelajaran Daring: Teori, Prinsip Dasar, dan Implementasi LMS</p>
+        </header>
+
+        <h2 class="section-title">Ringkasan Materi Esensial</h2>
+        
+        <div class="card">
+            <span class="card-tag">KB 1</span>
+            <h2>Pengertian & Karakteristik Pembelajaran Daring</h2>
+            <ul class="materi-list">
+                <li><strong>Hakekat Sistem:</strong> Memanfaatkan infrastruktur jaringan internet sebagai media transmisi materi dan interaksi. Kelemahan mutlak terletak pada ketergantungan koneksi jaringan dan urgensi kesiapan kompetensi digital (*digital literacy*).</li>
+                <li><strong>10 Prinsip Utama Desain Daring:</strong> Kesesuaian Kurikulum, Inklusivitas, Keterlibatan Peserta Didik, Inovatif, Efektif, Asesmen Formatif, Asesmen Sumatif, Keutuhan/Konsistensi, Kemudahan Navigasi (*User-friendly*), dan Efisiensi Biaya.</li>
+                <li><strong>6 Prinsip Mengajar:</strong> Kontak intensif pendidik-siswa, kolaborasi aktif antar-siswa, iklim belajar aktif, umpan balik yang cepat (*prompt feedback*), target pembelajaran rasional, dan penghargaan keberagaman individu.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <span class="card-tag">KB 2</span>
+            <h2>Model Interaksi & Lingkungan Belajar</h2>
+            <ul class="materi-list">
+                <li><strong>Sinkronus (Synchronous):</strong> Interaksi terikat waktu nyata (*real-time*). Contoh: Webinar Zoom, Teams, live chat interaktif.</li>
+                <li><strong>Asinkronus (Asynchronous):</strong> Interaksi mandiri, fleksibel, terikat rentang tenggat waktu. Contoh: Forum diskusi teks, modul digital e-learning.</li>
+                <li><strong>Evolusi Desain Kolaboratif:</strong> Pergeseran dari model kelas konvensional (hanya memindahkan teks dokumen/video searah ke server) menuju model berbasis interaksi sosial. Inti keberhasilan sistem daring kolaboratif bertumpu penuh pada **keaktifan lalu lintas argumen di dalam forum diskusi**, bukan pada kemegahan visual bahan ajarnya.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <span class="card-tag">KB 3</span>
+            <h2>Infrastruktur & Pengelolaan LMS Moodle</h2>
+            <ul class="materi-list">
+                <li><strong>Fungsi Inti LMS:</strong> Aplikasi sistem untuk mengelola administrasi pendaftaran, distribusi materi, rekam jejak aktivitas, dan penilaian performa akademis siswa.</li>
+                <li><strong>Otoritas Akun & Keamanan:</strong> Pemisahan peran (*role mapping*) secara ketat antara Administrator, Teacher, Non-editing Teacher, dan Student guna memitigasi risiko kebocoran data.</li>
+                <li><strong>Bulk User Actions & Enrolling:</strong> Fitur esensial untuk memanipulasi ratusan data pengguna (modifikasi/hapus) sekaligus serta penentuan metode masuk kelas (pendaftaran mandiri dengan kunci akses atau penugasan otomatis oleh sistem).</li>
+            </ul>
+        </div>
+
+        <h2 class="section-title">Kuis Prediksi Ujian (Akurasi Soal 90%)</h2>
+        <div class="card">
+            <p style="color: var(--text-muted); margin-bottom: 20px;">*Petunjuk: Geser opsi jawaban secara horizontal (kiri/kanan) jika teks kepotong atau ruang layar gajet Anda terbatas.*</p>
+            
+            <form id="quiz-form" class="quiz-container">
+                
+                <div class="question-block" data-correct="A">
+                    <p class="question-text">1. Komponen manakah di bawah ini yang dikategorikan sebagai salah satu kelemahan laten paling esensial dalam implementasi sistem pembelajaran daring?</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q1" value="A"> A. Ketergantungan absolut pada stabilitas koneksi jaringan</label>
+                        <label class="option-label"><input type="radio" name="q1" value="B"> B. Reduksi drastis biaya investasi infrastruktur</label>
+                        <label class="option-label"><input type="radio" name="q1" value="C"> C. Hilangnya muatan kurikulum nasional</label>
+                        <label class="option-label"><input type="radio" name="q1" value="D"> D. Ketidakmampuan sistem menyediakan modul digital</label>
+                        <label class="option-label"><input type="radio" name="q1" value="E"> E. Terlalu tingginya otomatisasi asesmen sumatif</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Pembelajaran daring sangat rentan terhadap kegagalan teknis apabila infrastruktur jaringan internet tidak stabil atau tidak merata.</div>
+                </div>
+
+                <div class="question-block" data-correct="C">
+                    <p class="question-text">2. Seorang dosen merancang sistem e-learning yang mampu melayani mahasiswa reguler, pekerja paruh waktu, hingga mahasiswa difabel dengan tingkat aksesibilitas yang setara. Prinsip dasar e-learning manakah yang sedang diimplementasikan?</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q2" value="A"> A. Asesmen Formatif Kontinu</label>
+                        <label class="option-label"><input type="radio" name="q2" value="B"> B. Efisiensi Pembiayaan Sistem</label>
+                        <label class="option-label"><input type="radio" name="q2" value="C"> C. Inklusivitas Desain Pedagogis</label>
+                        <label class="option-label"><input type="radio" name="q2" value="D"> D. Konsistensi Struktur Navigasi</label>
+                        <label class="option-label"><input type="radio" name="q2" value="E"> E. Inovasi Teknologi Berkelanjutan</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Inklusivitas menuntut sistem e-learning untuk merangkul segala diversitas, batasan fisik, ekonomi, maupun sosial penggunanya.</div>
+                </div>
+
+                <div class="question-block" data-correct="B">
+                    <p class="question-text">3. Mengapa pemberian respons cepat ("prompt feedback") diklasifikasikan sebagai pilar krusial dalam 6 prinsip mengajar daring?</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q3" value="A"> A. Demi menghemat konsumsi kuota data server utama</label>
+                        <label class="option-label"><input type="radio" name="q3" value="B"> B. Memitigasi disorientasi arah belajar dan menjaga motivasi internal siswa</label>
+                        <label class="option-label"><input type="radio" name="q3" value="C"> C. Membantu tugas administrator utama dalam mengunci hak akses</label>
+                        <label class="option-label"><input type="radio" name="q3" value="D"> D. Mengganti kedudukan asesmen sumatif akhir semester</label>
+                        <label class="option-label"><input type="radio" name="q3" value="E"> E. Menghapus kewajiban interaksi asinkronus</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Tanpa adanya prompt feedback, mahasiswa mandiri rentan mengalami kebingungan (*disorientation*) arah pengerjaan tugas.</div>
+                </div>
+
+                <div class="question-block" data-correct="D">
+                    <p class="question-text">4. Aktivitas manakah di bawah ini yang mempresentasikan model interaksi sinkronus dalam pembelajaran daring?</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q4" value="A"> A. Mengunduh materi PDF pada malam hari</label>
+                        <label class="option-label"><input type="radio" name="q4" value="B"> B. Mengirimkan tugas esai melalui menu pelaporan LMS</label>
+                        <label class="option-label"><input type="radio" name="q4" value="C"> C. Menulis argumen balasan di dalam forum diskusi berkala</label>
+                        <label class="option-label"><input type="radio" name="q4" value="D"> D. Berdiskusi langsung secara real-time via video conference Zoom</label>
+                        <label class="option-label"><input type="radio" name="q4" value="E"> E. Membaca rangkuman ringkas pada papan pengumuman virtual</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Sinkronus mensyaratkan adanya interaksi simultan pada detik waktu yang sama secara langsung (*real-time*).</div>
+                </div>
+
+                <div class="question-block" data-correct="E">
+                    <p class="question-text">5. Ciri fundamental dari pergeseran paradigma pembelajaran daring menuju "Desain Pembelajaran Kolaboratif" adalah...</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q5" value="A"> A. Jumlah materi teks dalam format PDF diperbanyak</label>
+                        <label class="option-label"><input type="radio" name="q5" value="B"> B. Durasi pengerjaan ujian akhir dipangkas menjadi lebih singkat</label>
+                        <label class="option-label"><input type="radio" name="q5" value="C"> C. Seluruh sistem administrasi dipegang penuh oleh rektorat</label>
+                        <label class="option-label"><input type="radio" name="q5" value="D"> D. Penggunaan animasi grafis tiga dimensi yang masif</label>
+                        <label class="option-label"><input type="radio" name="q5" value="E"> E. Fokus utama bertumpu pada kualitas dan dinamika interaksi di forum diskusi</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Pembelajaran kolaboratif daring tidak lagi mengagungkan konten statis, melainkan mengutamakan proses dialektika interaksi di ruang forum.</div>
+                </div>
+
+                <div class="question-block" data-correct="B">
+                    <p class="question-text">6. Dari perspektif operasional instruksional, apa kegunaan mendasar dari sebuah platform Learning Management System (LMS)?</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q6" value="A"> A. Sebagai media penyimpanan hardware fisik cadangan universitas</label>
+                        <label class="option-label"><input type="radio" name="q6" value="B"> B. Perangkat lunak terintegrasi untuk mengelola, mendokumentasikan, melacak, dan menilai proses belajar</label>
+                        <label class="option-label"><input type="radio" name="q6" value="C"> C. Algoritma mesin untuk meretas database eksternal pengganggu</label>
+                        <label class="option-label"><input type="radio" name="q6" value="D"> D. Alat pencetak kartu tanda mahasiswa fisik secara otomatis</label>
+                        <label class="option-label"><input type="radio" name="q6" value="E"> E. Media publikasi jurnal ilmiah terbuka tingkat internasional</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> LMS bertugas memfasilitasi administrasi penyebaran materi pelajaran, rekam jejak, dan tracking nilai siswa.</div>
+                </div>
+
+                <div class="question-block" data-correct="A">
+                    <p class="question-text">7. Mengapa fitur "Bulk User Actions" pada sistem pengelolaan pengguna di Moodle sangat krusial bagi seorang administrator kelas besar?</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q7" value="A"> A. Efisiensi waktu untuk memodifikasi atau menghapus ratusan akun sekaligus dalam satu kali perintah</label>
+                        <label class="option-label"><input type="radio" name="q7" value="B"> B. Mampu mengubah nilai ujian mahasiswa secara sepihak</label>
+                        <label class="option-label"><input type="radio" name="q7" value="C"> C. Mempercepat koneksi internet pengguna akhir</label>
+                        <label class="option-label"><input type="radio" name="q7" value="D"> D. Menghapus virus komputer yang bersarang di browser pengguna</label>
+                        <label class="option-label"><input type="radio" name="q7" value="E"> E. Otomatis mengubah kelas asinkronus menjadi sinkronus</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Bulk user actions dirancang untuk memproses data pengguna berskala masal secara cepat demi optimalisasi manajemen admin.</div>
+                </div>
+
+                <div class="question-block" data-correct="C">
+                    <p class="question-text">8. Apa implikasi fatal jika aspek pengaturan peran ("Role Mapping") pada platform pembelajaran daring tidak dikonfigurasi dengan ketat?</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q8" value="A"> A. Server internet universitas otomatis mati total</label>
+                        <label class="option-label"><input type="radio" name="q8" value="B"> B. Mahasiswa tidak bisa membaca bahan ajar yang diberikan</label>
+                        <label class="option-label"><input type="radio" name="q8" value="C"> C. Kerentanan pelanggaran integritas karena akun tipe 'student' bisa meretas dan mengubah instrumen penilaian</label>
+                        <label class="option-label"><input type="radio" name="q8" value="D"> D. Tampilan grafis antarmuka website berubah berantakan</label>
+                        <label class="option-label"><input type="radio" name="q8" value="E"> E. Metode pendaftaran mandiri (self-enrollment) tidak berfungsi</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Pembatasan peran yang ceroboh mengakibatkan siswa memiliki hak otorisasi pengajar untuk manipulasi data evaluasi.</div>
+                </div>
+
+                <div class="question-block" data-correct="D">
+                    <p class="question-text">9. Apabila mahasiswa diwajibkan menginput kata sandi khusus yang didapatkan dari dosen untuk masuk ke dalam ruang kelas digital e-learning, metode pendaftaran (*enrolling method*) apa yang digunakan?</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q9" value="A"> A. Manual Admin Assignment</label>
+                        <label class="option-label"><input type="radio" name="q9" value="B"> B. Guest Access Bypass</label>
+                        <label class="option-label"><input type="radio" name="q9" value="C"> C. Bulk System Uploading</label>
+                        <label class="option-label"><input type="radio" name="q9" value="D"> D. Self-Enrollment with Enrolment Key</label>
+                        <label class="option-label"><input type="radio" name="q9" value="E"> E. Direct Synchronization Link</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Metode memasukkan kunci akses mandiri oleh user tergolong ke dalam mekanisme self-enrollment yang terkontrol.</div>
+                </div>
+
+                <div class="question-block" data-correct="B">
+                    <p class="question-text">10. Dari 10 prinsip inovasi daring, prinsip dasar yang menegaskan bahwa seluruh struktur alur, kejelasan kriteria asesmen, dan petunjuk teknis instruksional tidak boleh berubah-ubah di tengah jalan dinamakan prinsip...</p>
+                    <div class="options-wrapper">
+                        <label class="option-label"><input type="radio" name="q10" value="A"> A. Inovasi Radikal</label>
+                        <label class="option-label"><input type="radio" name="q10" value="B"> B. Utuh, Konsisten, dan Transparan</label>
+                        <label class="option-label"><input type="radio" name="q10" value="C"> C. Asesmen Formatif Periodik</label>
+                        <label class="option-label"><input type="radio" name="q10" value="D"> D. Fleksibilitas Ruang Interaksi</label>
+                        <label class="option-label"><input type="radio" name="q10" value="E"> E. Efisiensi Komparatif Anggaran</label>
+                    </div>
+                    <div class="explanation"><strong>Analisis Kunci:</strong> Keutuhan, konsistensi, dan transparansi menuntut keterbukaan parameter akademis sejak awal program berjalan hingga akhir evaluasi.</div>
+                </div>
+
+                <button type="button" class="btn-submit" onclick="checkAnswers()">Kirim & Hitung Skor Akhir</button>
+            </form>
+
+            <div id="result-display"></div>
+        </div>
+    </main>
+
+    <script>
+        // Kendali Splash Screen
+        document.addEventListener("DOMContentLoaded", () => {
+            const splash = document.getElementById("splash-screen");
+            const mainContent = document.getElementById("main-content");
+
+            setTimeout(() => {
+                splash.style.opacity = "0";
+                splash.style.transform = "translateY(-20px)";
+                mainContent.style.display = "block";
+                
+                setTimeout(() => {
+                    mainContent.style.opacity = "1";
+                    mainContent.style.transform = "scale(1)";
+                    splash.remove();
+                }, 50);
+            }, 3500); 
+        });
+
+        // Logika Evaluasi Jawaban Kuis
+        function checkAnswers() {
+            const form = document.getElementById("quiz-form");
+            const blocks = form.getElementsByClassName("question-block");
+            let score = 0;
+            const totalQuestions = blocks.length;
+
+            for (let i = 0; i < totalQuestions; i++) {
+                const block = blocks[i];
+                const correctAnswer = block.getAttribute("data-correct");
+                const questionName = "q" + (i + 1);
+                const selectedOption = form.querySelector(`input[name="${questionName}"]:checked`);
+                const labels = block.getElementsByClassName("option-label");
+                const exp = block.getElementsByClassName("explanation")[0];
+
+                // Reset style
+                for (let j = 0; j < labels.length; j++) {
+                    labels[j].classList.remove("correct-ans", "wrong-ans");
+                }
+
+                // Cek jawaban
+                if (selectedOption) {
+                    const userAnsw = selectedOption.value;
+                    if (userAnsw === correctAnswer) {
+                        score++;
+                        selectedOption.parentElement.classList.add("correct-ans");
+                    } else {
+                        selectedOption.parentElement.classList.add("wrong-ans");
+                        // Highlight opsi yang harusnya benar
+                        for (let k = 0; k < labels.length; k++) {
+                            if (labels[k].querySelector('input').value === correctAnswer) {
+                                labels[k].classList.add("correct-ans");
+                            }
+                        }
+                    }
+                } else {
+                    // Jika tidak dijawab sama sekali, tampilkan yang benar
+                    for (let k = 0; k < labels.length; k++) {
+                        if (labels[k].querySelector('input').value === correctAnswer) {
+                            labels[k].classList.add("correct-ans");
+                        }
+                    }
+                }
+                
+                // Tampilkan pembahasan
+                if (exp) {
+                    exp.style.display = "block";
+                }
+            }
+
+            // Tampilkan Skor Akhir
+            const resultDisplay = document.getElementById("result-display");
+            const finalScore = Math.round((score / totalQuestions) * 100);
+            resultDisplay.innerHTML = `Evaluasi Selesai! Skor Anda: ${finalScore} / 100 <br> <span style="font-size: 1rem; color: #fff;">(Berhasil Menjawab Benar ${score} dari ${totalQuestions} Soal)</span>`;
+            resultDisplay.style.display = "block";
+            resultDisplay.scrollIntoView();
+        }
+    </script>
+</body>
+</html>
