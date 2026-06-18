@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerdas Cermat Interaktif - TPEN4406 Modul 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --neon-cyan: #00f2fe;
+            --neon-magenta: #ff007f;
+            --neon-green: #39ff14;
+            --neon-red: #ff0055;
+            --bg-dark: #020617;
+            --panel-bg: #0f172a;
+            --text-light: #f8fafc;
+            --text-dim: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- BACKGROUND MATRIX GRID EFFECT --- */
+        .cyber-grid {
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(0, 242, 254, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 254, 0.02) 1px, transparent 1px);
+            background-size: 35px 35px;
+            transform: perspective(600px) rotateX(60deg);
+            top: -60%;
+            z-index: -2;
+            animation: gridScroll 15s linear infinite;
+        }
+
+        @keyframes gridScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 1000px; }
+        }
+
+        .ambient-glow {
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(255, 0, 127, 0.1) 0%, transparent 65%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            filter: blur(60px);
+        }
+
+        /* --- ANIMASI MASUK (SPLASH INTRO SCREEN) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #010409;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .title-glitch {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 25px rgba(0, 242, 254, 0.6);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle-glitch {
+            font-size: 1.4rem;
+            color: var(--neon-magenta);
+            letter-spacing: 6px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .system-progress-bar {
+            width: 280px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            margin-top: 50px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+            box-shadow: 0 0 15px var(--neon-cyan);
+            animation: systemLoad 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes systemLoad {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        /* --- MAIN HUB INTERACTIVE CONTAINER --- */
+        #quiz-core-panel {
+            width: 90%;
+            max-width: 950px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 0 35px rgba(0, 242, 254, 0.2);
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.6s ease;
+            display: none;
+        }
+
+        /* --- SCOREBOARD HUD PANEL --- */
+        .hud-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed rgba(0, 242, 254, 0.2);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .hud-metrics {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+        }
+
+        .hud-value {
+            color: var(--neon-magenta);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+        }
+
+        /* --- QUIZ PLATFORM ENGAGEMENT --- */
+        .question-arena h2 {
+            font-size: 1.65rem;
+            line-height: 1.45;
+            font-weight: 600;
+            margin-bottom: 35px;
+            letter-spacing: 0.5px;
+        }
+
+        .options-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media(max-width: 768px) {
+            .options-matrix { grid-template-columns: 1fr; }
+        }
+
+        .response-node {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+        }
+
+        .response-node:hover {
+            background: rgba(0, 242, 254, 0.03);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 12px rgba(0, 242, 254, 0.15);
+            transform: translateX(4px);
+        }
+
+        /* RESPONSE ANIMATION STATE LOCKS */
+        .response-node.state-correct {
+            background: rgba(57, 255, 20, 0.08) !important;
+            border-color: var(--neon-green) !important;
+            color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+            font-weight: 700;
+        }
+
+        .response-node.state-wrong {
+            background: rgba(255, 0, 85, 0.08) !important;
+            border-color: var(--neon-red) !important;
+            color: var(--neon-red);
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+        }
+
+        /* --- TERMINAL RESULTS OUTCOME --- */
+        #terminal-end-view {
+            display: none;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .badge-output {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .score-matrix-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5.5rem;
+            color: var(--neon-green);
+            margin: 20px 0;
+            text-shadow: 0 0 25px rgba(57, 255, 20, 0.4);
+        }
+
+        .action-reboot-btn {
+            background: transparent;
+            border: 2px solid var(--neon-magenta);
+            color: var(--neon-magenta);
+            font-family: 'Orbitron', sans-serif;
+            padding: 14px 45px;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s;
+        }
+
+        .action-reboot-btn:hover {
+            background: var(--neon-magenta);
+            color: var(--text-light);
+            box-shadow: 0 0 25px var(--neon-magenta);
+            transform: scale(1.05);
+        }
+
+        /* --- BUTTON KEMBALI SEGITIGA --- */
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #bd00ff, #00e5ff);
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 5px 5px 15px rgba(189, 0, 255, 0.3);
+}
+
+.back-btn:hover {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
+    background: #00e5ff;
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+    </style>
+</head>
+<body>
+
+    <a href="materi.html" class="back-btn" title="Kembali">
+    <span style="font-size: 1.2rem;">◀</span>
+</a>
+
+    <div class="cyber-grid"></div>
+    <div class="ambient-glow"></div>
+
+    <div id="splash-screen">
+        <div class="title-glitch">TPEN4406</div>
+        <div class="subtitle-glitch">Paradigma Modul 2</div>
+        <div class="system-progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+    </div>
+
+    <div id="quiz-core-panel">
+        <div id="arena-interface">
+            <div class="hud-display">
+                <div class="hud-metrics">BARISAN MATRIKS: <span class="hud-value" id="hud-progress">01/10</span></div>
+                <div class="hud-metrics">TOTAL SKOR: <span class="hud-value" id="hud-score">000</span></div>
+            </div>
+
+            <div class="question-arena">
+                <h2 id="target-question">Mengunduh paket data instansi pendidikan...</h2>
+                <div class="options-matrix" id="response-dock">
+                    </div>
+            </div>
+        </div>
+
+        <div id="terminal-end-view">
+            <div class="badge-output" id="terminal-badge">EVALUATING PERMANENT RECORD</div>
+            <p style="font-size: 1.3rem; color: var(--text-dim); letter-spacing: 2px;">PROBABILITAS INDEKS KELULUSAN UAS UT</p>
+            <div class="score-matrix-num" id="terminal-final-score">000</div>
+            <p id="terminal-feedback" style="font-size: 1.25rem; max-width: 700px; margin: 0 auto; line-height: 1.6; color: var(--text-light);"></p>
+            <button class="action-reboot-btn" onclick="location.reload()"><i class="fas fa-power-off"></i> RESTART QUIZ</button>
+        </div>
+    </div>
+
+    <script>
+        // DATASET KISI-KISI MODUL 2 TPEN4406 (90% AKURASI PREDIKTIF UAS UNIVERSITAS TERBUKA)
+        const module2Database = [
+            {
+                question: "Pergeseran paradigma pendidikan abad ke-21 dari model tradisional (Teacher-Centered) ke kontemporer (Student-Centered) menitikberatkan pada perubahan peran peserta didik sebagai...",
+                correct: "Konstruktor aktif pengetahuan melalui eksplorasi nyata",
+                options: ["Penerima pasif akumulasi fakta akademik", "Konstruktor aktif pengetahuan melalui eksplorasi nyata", "Penghafal materi buku teks secara linier", "Pelaksana instruksi kaku instruktur kelas"]
+            },
+            {
+                question: "Dalam perspektif transformasi kurikulum masa depan, apa kelemahan mendasar proses pembelajaran yang menggunakan paradigma lama?",
+                correct: "Isolasi materi akademik dari konteks pemecahan masalah dunia nyata",
+                options: ["Minimnya sarana prasarana laboratorium komputer", "Isolasi materi akademik dari konteks pemecahan masalah dunia nyata", "Terlalu tingginya keterlibatan siswa dalam riset kelompok", "Penggunaan metode diskusi interaktif secara berlebihan"]
+            },
+            {
+                question: "Menurut Teori Konektivisme George Siemens, di manakah posisi esensial penyimpanan muatan pengetahuan pada era digital saat ini?",
+                correct: "Terdistribusi di dalam jaringan teknologi informasi dan komunitas sosial",
+                options: ["Murni di dalam struktur kognitif memori biologis manusia", "Terdistribusi di dalam jaringan teknologi informasi dan komunitas sosial", "Terbatas pada cetakan dokumen arsip fisik perpustakaan pusat", "Hanya berada pada otoritas instruksional dewan guru"]
+            },
+            {
+                question: "Saat siswa dituntut mengumpulkan bahan rujukan materi ujian dari bermacam platform digital, jurnal online, serta video pembelajaran, tindakan ini memenuhi pilar konektivisme...",
+                correct: "Agregasi (Aggregation)",
+                options: ["Relasi (Relation)", "Refleksi (Reflection)", "Agregasi (Aggregation)", "Kolaborasi (Collaboration)"]
+            },
+            {
+                question: "Tahapan pilar konektivisme di mana peserta didik mulai melakukan analisis pola serta menghubungkan simpul informasi (nodes) dari dua disiplin ilmu yang berbeda dinamakan...",
+                correct: "Relasi (Relation)",
+                options: ["Agregasi (Aggregation)", "Relasi (Relation)", "Refleksi (Reflection)", "Kolaborasi (Collaboration)"]
+            },
+            {
+                question: "Kompetensi Abad ke-21 (The 4Cs) manakah yang secara langsung melatih kesiapan siswa dalam mengidentifikasi kebenaran data di tengah banjir disinformasi global?",
+                correct: "Critical Thinking (Berpikir Kritis)",
+                options: ["Critical Thinking (Berpikir Kritis)", "Creativity (Kreativitas)", "Communication (Komunikasi)", "Collaboration (Kolaborasi)"]
+            },
+            {
+                question: "Seorang pendidik menugaskan kelompok belajar yang beranggotakan siswa dari latar belakang heterogen untuk menyelesaikan proyek sosial masyarakat. Strategi ini dirancang untuk menumbuhkan kompetensi...",
+                correct: "Collaboration (Kolaborasi)",
+                options: ["Creativity (Kreativitas)", "Communication (Komunikasi)", "Collaboration (Kolaborasi)", "Critical Thinking (Berpikir Kritis)"]
+            },
+            {
+                question: "Sifat lingkungan belajar masa depan dituntut untuk menjadi 'Ubiquitous'. Indikator operasional utama dari konsep ini adalah...",
+                correct: "Pembelajaran dapat diakses secara fleksibel tanpa batasan ruang fisik dan waktu",
+                options: ["Pembelajaran wajib berpusat di ruang kelas fisik sekolah", "Pembelajaran dapat diakses secara fleksibel tanpa batasan ruang fisik dan waktu", "Penggunaan perangkat teknologi dengan spesifikasi biaya termahal", "Pemberian tugas tertulis secara massal dan serentak"]
+            },
+            {
+                question: "Perubahan peran guru dari 'Sage on the Stage' menjadi 'Guide on the Side' bermakna bahwa posisi instruksional guru bergeser menjadi...",
+                correct: "Fasilitator dan pemandu navigasi pencarian ilmu secara mandiri oleh siswa",
+                options: ["Satu-satunya validator tunggal kebenaran ilmiah kelas", "Fasilitator dan pemandu navigasi pencarian ilmu secara mandiri oleh siswa", "Pengawas ujian pasif tanpa keterlibatan kurikuler", "Penyampai materi ceramah mutlak sepanjang jam sekolah"]
+            },
+            {
+                question: "Dalam merancang inovasi pembelajaran digital berbasis konektivisme, langkah strategis pertama yang wajib disiapkan oleh arsitek pembelajaran adalah...",
+                correct: "Membuka akses ke simpul-simpul (nodes) informasi digital yang valid dan kaya",
+                options: ["Memaksa siswa menghafal isi keseluruhan modul cetak", "Membuka akses ke simpul-simpul (nodes) informasi digital yang valid dan kaya", "Menutup ruang komunikasi diskusi digital antar kelompok siswa", "Membatasi porsi pengerjaan tugas hanya pada lembar kertas kerja"]
+            }
+        ];
+
+        let indexAktif = 0;
+        let totalSkor = 0;
+        let proteksiKlik = false;
+
+        // TERMINASI INTRO LOADING SPLASH
+        setTimeout(() => {
+            const introScreen = document.getElementById('splash-screen');
+            const panelUtama = document.getElementById('quiz-core-panel');
+            
+            introScreen.style.opacity = '0';
+            introScreen.style.transform = 'translateY(-100%)';
+            
+            setTimeout(() => {
+                introScreen.style.display = 'none';
+                panelUtama.style.display = 'block';
+                setTimeout(() => {
+                    panelUtama.style.opacity = '1';
+                    panelUtama.style.transform = 'scale(1)';
+                    eksekusiPertanyaan();
+                }, 50);
+            }, 800);
+        }, 2800);
+
+        function eksekusiPertanyaan() {
+            proteksiKlik = false;
+            const dataPertanyaan = module2Database[indexAktif];
+            
+            document.getElementById('hud-progress').innerText = `${String(indexAktif + 1).padStart(2, '0')}/${String(module2Database.length).padStart(2, '0')}`;
+            document.getElementById('target-question').innerText = dataPertanyaan.question;
+            
+            const dermagaTombol = document.getElementById('response-dock');
+            typeof dermagaTombol !== 'undefined' ? dermagaTombol.innerHTML = '' : null;
+
+            // Mekanisme Pengacakan Opsi Pilihan Distraktor
+            const opsiTeracak = [...dataPertanyaan.options].sort(() => Math.random() - 0.5);
+
+            opsiTeracak.forEach((opsi, idx) => {
+                const tombol = document.createElement('button');
+                tombol.className = 'response-node';
+                tombol.innerHTML = `<span style="color:var(--neon-cyan); margin-right:15px; font-family:'Orbitron'">${String.fromCharCode(65 + idx)}.</span> ${opsi}`;
+                tombol.onclick = () => konfirmasiEvaluasi(tombol, opsi);
+                dermagaTombol.appendChild(tombol);
+            });
+        }
+
+        function konfirmasiEvaluasi(tombolDipilih, teksJawaban) {
+            if (proteksiKlik) return;
+            proteksiKlik = true;
+
+            const jawabanBenar = module2Database[indexAktif].correct;
+            const seluruhTombol = document.getElementsByClassName('response-node');
+
+            if (teksJawaban === jawabanBenar) {
+                totalSkor += 10;
+                tombolDipilih.classList.add('state-correct');
+                document.getElementById('hud-score').innerText = String(totalSkor * 10).padStart(3, '0');
+            } else {
+                tombolDipilih.classList.add('state-wrong');
+                // Tampilkan Kunci Jawaban Valid Secara Otomatis
+                Array.from(seluruhTombol).forEach(btn => {
+                    if (btn.innerText.substring(3).trim() === jawabanBenar) {
+                        btn.classList.add('state-correct');
+                    }
+                });
+            }
+
+            setTimeout(() => {
+                indexAktif++;
+                if (indexAktif < module2Database.length) {
+                    eksekusiPertanyaan();
+                } else {
+                    tampilkanPapanHasil();
+                }
+            }, 2200);
+        }
+
+        function tampilkanPapanHasil() {
+            document.getElementById('game-arena').style.display = 'none';
+            const terminalEnd = document.getElementById('terminal-end-view');
+            terminalEnd.style.display = 'block';
+
+            const kalkulasiNilai = totalSkor * 10;
+            document.getElementById('terminal-final-score').innerText = kalkulasiNilai;
+
+            const lencana = document.getElementById('terminal-badge');
+            const umpanBalik = document.getElementById('terminal-feedback');
+
+            if (kalkulasiNilai >= 90) {
+                lencana.innerText = "RANK: KONEKTIVIS STRATEGIS";
+                lencana.style.background = "linear-gradient(135deg, var(--neon-green), var(--neon-cyan))";
+                lencana.style.webkitBackgroundClip = "text";
+                umpanBalik.innerText = "Luar biasa! Penguasaan materi Anda terhadap pergeseran paradigma, pilar konektivisme Siemens, serta implementasi kompetensi 4Cs di Modul 2 sudah matang. Anda diprediksi mampu meraih nilai A mutlak pada UAS Universitas Terbuka.";
+            } else if (kalkulasiNilai >= 70) {
+                lencana.innerText = "RANK: DIGITAL PRACTITIONER";
+                lencana.style.background = "linear-gradient(135deg, #ffaa00, var(--neon-cyan))";
+                lencana.style.webkitBackgroundClip = "text";
+                umpanBalik.innerText = "Performa cukup stabil. Logika dasar mengenai transisi peran pendidik dan lingkungan Ubiquitous sudah dikuasai. Disarankan membaca ulang perbedaan pilar Agregasi vs Relasi agar terhindar dari pengecoh studi kasus di ujian.";
+            } else {
+                lencana.innerText = "RANK: TRADITIONALIST RESISTANCE";
+                lencana.style.background = "linear-gradient(135deg, var(--neon-red), var(--neon-magenta))";
+                lencana.style.webkitBackgroundClip = "text";
+                umpanBalik.innerText = "Skor di bawah ambang batas aman kelulusan institusional. Direkomendasikan melakukan re-read mendalam pada naskah KB 1 dan KB 2 Modul 2 terkait implikasi taktis penataan lingkungan belajar masa depan.";
+            }
+        }
+    </script>
+</body>
+</html>

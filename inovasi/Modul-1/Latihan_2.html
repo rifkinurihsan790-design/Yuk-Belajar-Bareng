@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerdas Cermat Elite - TPEN4406 Inovasi Pembelajaran</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-cyan: #00f2fe;
+            --neon-purple: #9d4edf;
+            --neon-green: #39ff14;
+            --neon-red: #ff0055;
+            --dark-space: #030712;
+            --panel-bg: #0f172a;
+            --text-main: #f8fafc;
+            --text-dim: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-space);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- BACKGROUND PARTICLES/GLOW EFFECT --- */
+        .cyber-grid {
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg);
+            top: -50%;
+            z-index: -2;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 1000px; }
+        }
+
+        .ambient-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(157, 78, 223, 0.15) 0%, transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            filter: blur(80px);
+        }
+
+        /* --- ANIMASI MASUK (SPLASH INTRO) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark-space);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .glitch-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .splash-subtitle {
+            font-size: 1.5rem;
+            color: var(--neon-purple);
+            letter-spacing: 8px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .system-loader {
+            width: 300px;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            margin-top: 40px;
+            border-radius: 2px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .loader-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            box-shadow: 0 0 10px var(--neon-cyan);
+            animation: systemBoot 2.5s cubic-bezier(0.1, 0.6, 0.2, 1) forwards;
+        }
+
+        @keyframes systemBoot {
+            0% { width: 0%; }
+            30% { width: 45%; }
+            70% { width: 75%; }
+            100% { width: 100%; }
+        }
+
+        /* --- MAIN INTERACTIVE CONTAINER --- */
+        #quiz-universe {
+            width: 90%;
+            max-width: 950px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 2px solid var(--neon-purple);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(157, 78, 223, 0.3), inset 0 0 20px rgba(0, 242, 254, 0.05);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s ease;
+            display: none;
+        }
+
+        /* --- DASHBOARD MONITOR PANEL --- */
+        .monitor-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed rgba(157, 78, 223, 0.3);
+            padding-bottom: 20px;
+            margin-bottom: 35px;
+        }
+
+        .hud-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+        }
+
+        .hud-value {
+            color: var(--neon-cyan);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+        }
+
+        /* --- QUESTION TECH PLATFORM --- */
+        .question-box h2 {
+            font-size: 1.8rem;
+            line-height: 1.4;
+            font-weight: 600;
+            margin-bottom: 35px;
+            letter-spacing: 0.5px;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media(max-width: 768px) {
+            .answers-grid { grid-template-columns: 1fr; }
+        }
+
+        .matrix-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 22px;
+            text-align: left;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .matrix-btn:hover {
+            background: rgba(0, 242, 254, 0.04);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .matrix-btn::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; width: 4px; height: 100%;
+            background: transparent;
+            transition: 0.2s;
+        }
+
+        .matrix-btn:hover::before {
+            background: var(--neon-cyan);
+        }
+
+        /* STATE STATUS RESPONSES */
+        .matrix-btn.correct-lock {
+            background: rgba(57, 255, 20, 0.08) !important;
+            border-color: var(--neon-green) !important;
+            color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+        }
+        .matrix-btn.correct-lock::before { background: var(--neon-green); }
+
+        .matrix-btn.wrong-lock {
+            background: rgba(255, 0, 85, 0.08) !important;
+            border-color: var(--neon-red) !important;
+            color: var(--neon-red);
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+        }
+        .matrix-btn.wrong-lock::before { background: var(--neon-red); }
+
+        /* --- ARENA SCORE/TERMINAL RESULT --- */
+        #terminal-result {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .rank-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(157, 78, 223, 0.5);
+            margin-bottom: 15px;
+        }
+
+        .score-matrix {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            color: var(--neon-green);
+            margin: 20px 0;
+            text-shadow: 0 0 25px rgba(57, 255, 20, 0.4);
+        }
+
+        .reboot-action-btn {
+            background: transparent;
+            border: 2px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            font-family: 'Orbitron', sans-serif;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+        }
+
+        .reboot-action-btn:hover {
+            background: var(--neon-cyan);
+            color: var(--dark-space);
+            box-shadow: 0 0 25px var(--neon-cyan);
+            transform: scale(1.05);
+        }
+
+        /* --- BUTTON KEMBALI SEGITIGA --- */
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #bd00ff, #00e5ff);
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 5px 5px 15px rgba(189, 0, 255, 0.3);
+}
+
+.back-btn:hover {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
+    background: #00e5ff;
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+    </style>
+</head>
+<body>
+
+    <a href="modul_1.html" class="back-btn" title="Kembali">
+    <span style="font-size: 1.2rem;">◀</span>
+</a>
+
+    <div class="cyber-grid"></div>
+    <div class="ambient-glow"></div>
+
+    <div id="splash-screen">
+        <div class="glitch-title">TPEN4406</div>
+        <div class="splash-subtitle">Elite Challenge</div>
+        <div class="system-loader">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+
+    <div id="quiz-universe">
+        <div id="game-arena">
+            <div class="monitor-panel">
+                <div class="hud-label">ENGINE STATUS: <span class="hud-value" id="hud-progress">01/10</span></div>
+                <div class="hud-label">TOTAL SCORE: <span class="hud-value" id="hud-score">000</span></div>
+            </div>
+
+            <div class="question-box">
+                <h2 id="core-question">Memuat matriks pertanyaan tingkat tinggi...</h2>
+                <div class="answers-grid" id="answers-dock">
+                    </div>
+            </div>
+        </div>
+
+        <div id="terminal-result">
+            <div class="rank-badge" id="terminal-rank">MASTER PREPARATION</div>
+            <p style="font-size: 1.4rem; color: var(--text-dim); letter-spacing: 1px;">HASIL ANALISIS EVALUASI UAS UT</p>
+            <div class="score-matrix" id="terminal-score">000</div>
+            <p id="terminal-commentary" style="font-size: 1.3rem; max-width: 650px; margin: 0 auto; line-height: 1.5;"></p>
+            <button class="reboot-action-btn" onclick="location.reload()"><i class="fas fa-sync-alt"></i> REBOOT QUIZ</button>
+        </div>
+    </div>
+
+    <script>
+        // DATASET SOAL LEVEL SULIT (KISI-KISI AKURAT 90% KELUAR UAS UT MODUL 1)
+        const eliteDatabase = [
+            {
+                question: "Seorang kepala sekolah mengadopsi e-learning karena rekan sejawat di sekolah kluster instruksionalnya meraih predikat unggul secara terbuka. Menurut Rogers, motivasi adopsi inovasi ini sangat dipengaruhi oleh aspek apa dari atribut Keunggulan Relatif?",
+                correct: "Prestise dan Status Sosial (Social Prestige)",
+                options: ["Faktor Ekonomis Murni", "Prestise dan Status Sosial (Social Prestige)", "Kompleksitas Organisasional", "Kesesuaian Nilai Budaya"]
+            },
+            {
+                question: "Inovasi kurikulum berbasis TIK terhenti di sebuah institusi karena bertentangan dengan kebiasaan mengajar pengajar senior yang bersandar pada text-book konvensional selama puluhan tahun. Kegagalan difusi ini terjadi akibat rendahnya nilai...",
+                correct: "Kompatibilitas dengan Pengalaman Masa Lalu",
+                options: ["Kompatibilitas dengan Pengalaman Masa Lalu", "Keunggulan Relatif Teknis", "Triabilitas Eksperimental", "Observabilitas Hasil Akademik"]
+            },
+            {
+                question: "Berdasarkan matriks difusi Rogers, mengapa atribut 'Complexity' (Kerumitan) merupakan satu-satunya atribut utama yang berbanding terbalik secara linier dengan laju adopsi inovasi?",
+                correct: "Semakin tinggi persepsi kerumitan operasional, hambatan mental pengadopsi meningkat",
+                options: ["Semakin tinggi persepsi kerumitan operasional, hambatan mental pengadopsi meningkat", "Kerumitan mengindikasikan mahalnya nilai infrastruktur teknologi", "Sistem yang rumit menurunkan nilai prestise lembaga pendidikan", "Tingkat kerumitan mempercepat proses uji coba skala kecil"]
+            },
+            {
+                question: "Mengapa kelompok 'Late Adopters' atau pengadopsi lambat dalam institusi pendidikan sangat menuntut atribut 'Trialability' (Akses untuk dicoba) sebelum menerima inovasi pembelajaran digital?",
+                correct: "Mereka memerlukan mitigasi risiko kegagalan untuk menjaga kestabilan posisi",
+                options: ["Mereka memiliki modal kapital berlebih untuk eksperimen hancur-hancuran", "Mereka memerlukan mitigasi risiko kegagalan untuk menjaga kestabilan posisi", "Kelompok ini mendominasi penciptaan penemuan baru (invention)", "Mereka didorong oleh motivasi internal untuk menjadi pelopor tren digital"]
+            },
+            {
+                question: "Penggunaan Virtual Reality (VR) dalam kelas sejarah sulit diadopsi massal oleh sekolah sekitar karena hasilnya berupa 'peningkatan imajinasi spasial siswa' sulit dipantau langsung oleh kepala sekolah di luar kelas. Kasus ini menunjukkan kelemahan inovasi pada atribut...",
+                correct: "Observabilitas (Observability)",
+                options: ["Kompatibilitas Nilai", "Keunggulan Efisiensi", "Observabilitas (Observability)", "Triabilitas Struktural"]
+            },
+            {
+                question: "George Siemens mengkritik teori Behaviorisme dan Kognitivisme dalam konteks era digital karena teori-teori klasik tersebut berasumsi bahwa...",
+                correct: "Proses pembelajaran hanya terjadi secara internal di dalam diri individu",
+                options: ["Proses pembelajaran hanya terjadi secara internal di dalam diri individu", "Pengetahuan bersifat cair dan berubah secara konstan di internet", "Belajar dikendalikan penuh oleh arsitektur jaringan luar jaringan", "Teknologi memiliki kecerdasan buatan yang setara dengan manusia"]
+            },
+            {
+                question: "Dalam Teori Konektivisme, apa yang dimaksud dengan istilah 'Nodes' (Simpul) dalam struktur pemrosesan informasi pembelajaran abad ke-21?",
+                correct: "Sumber daya eksternal berupa informasi, data, manusia, atau komunitas teks",
+                options: ["Inti sel memori di dalam otak manusia", "Sumber daya eksternal berupa informasi, data, manusia, atau komunitas teks", "Kabel jaringan LAN yang menghubungkan laboratorium komputer", "Perangkat lunak antivirus penyaring hoaks edukasi"]
+            },
+            {
+                question: "Siswa mengumpulkan artikel jurnal, video penjelas, materi infografis dari internet, lalu memilahnya secara kritis untuk persiapan ujian. Dalam 4 pilar aktivitas Konektivisme Siemens, tindakan ini dikategorikan sebagai...",
+                correct: "Agregasi (Aggregation)",
+                options: ["Relasi (Relation)", "Refleksi (Reflection)", "Kolaborasi (Collaboration)", "Agregasi (Aggregation)"]
+            },
+            {
+                question: "Ketika guru mulai menghubungkan konsep dari materi biologi yang ia temukan di YouTube dengan modul kimia di sekolah untuk merancang asesmen baru, guru tersebut memasuki tahapan aktivitas konektivitas...",
+                correct: "Relasi (Relation)",
+                options: ["Agregasi (Aggregation)", "Relasi (Relation)", "Refleksi (Reflection)", "Disseminasi (Dissemination)"]
+            },
+            {
+                question: "Inovasi pendidikan sering kali mengalami resistensi sistemik berupa 'Mental Block'. Tindakan taktis apa yang paling tepat didasarkan pada modul 1 untuk mengatasi hambatan tersebut?",
+                correct: "Melakukan demonstrasi keunggulan nyata (Observability) lewat projek pilot",
+                options: ["Menerapkan sanksi pemotongan anggaran bagi pengajar konvensional", "Melakukan demonstrasi keunggulan nyata (Observability) lewat projek pilot", "Memaksa implementasi teknologi super rumit secara serentak", "Menghapus seluruh kurikulum lama tanpa melakukan sosialisasi konsep"]
+            }
+        ];
+
+        let indexAktif = 0;
+        let totalSkor = 0;
+        let proteksiKlik = false;
+
+        // TERMINASI SPLASH SCREEN & BOOTING ENGINE
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            const universe = document.getElementById('quiz-universe');
+            
+            splash.style.opacity = '0';
+            splash.style.transform = 'translateY(-100%)';
+            
+            setTimeout(() => {
+                splash.style.display = 'none';
+                universe.style.display = 'block';
+                setTimeout(() => {
+                    universe.style.opacity = '1';
+                    universe.style.transform = 'scale(1)';
+                    muatPertanyaan();
+                }, 50);
+            }, 800);
+        }, 3000);
+
+        function muatPertanyaan() {
+            proteksiKlik = false;
+            const data = eliteDatabase[indexAktif];
+            
+            document.getElementById('hud-progress').innerText = `${String(indexAktif + 1).padStart(2, '0')}/${String(eliteDatabase.length).padStart(2, '0')}`;
+            document.getElementById('core-question').innerText = data.question;
+            
+            const dock = document.getElementById('answers-dock');
+            dock.innerHTML = '';
+
+            // Pengacakan Pilihan Jawaban (Distraktor Kualitatif)
+            const acakPilihan = [...data.options].sort(() => Math.random() - 0.5);
+
+            acakPilihan.forEach((pilihan, indeks) => {
+                const button = document.createElement('button');
+                button.className = 'matrix-btn';
+                button.innerHTML = `<span style="color:var(--neon-cyan); margin-right:15px; font-family:'Orbitron'">${String.fromCharCode(65 + indeks)}.</span> ${pilihan}`;
+                button.onclick = () => verifikasiJawaban(button, pilihan);
+                dock.appendChild(button);
+            });
+        }
+
+        function verifikasiJawaban(tombolTerpilih, jawabanUser) {
+            if (proteksiKlik) return;
+            proteksiKlik = true;
+
+            const jawabanBenar = eliteDatabase[indexAktif].correct;
+            const semuaTombol = document.getElementsByClassName('matrix-btn');
+
+            if (jawabanUser === jawabanBenar) {
+                totalSkor += 10;
+                tombolTerpilih.classList.add('correct-lock');
+                document.getElementById('hud-score').innerText = String(totalSkor * 10).padStart(3, '0');
+            } else {
+                tombolTerpilih.classList.add('wrong-lock');
+                // Ungkap Jawaban Benar secara Otomatis (Sistem Cerdas Cermat)
+                Array.from(semuaTombol).forEach(btn => {
+                    if (btn.innerText.substring(3).trim() === jawabanBenar) {
+                        btn.classList.add('correct-lock');
+                    }
+                });
+            }
+
+            setTimeout(() => {
+                indexAktif++;
+                if (indexAktif < eliteDatabase.length) {
+                    muatPertanyaan();
+                } else {
+                    tampilkanEvaluasiAkhir();
+                }
+            }, 2000);
+        }
+
+        function tampilkanEvaluasiAkhir() {
+            document.getElementById('game-arena').style.display = 'none';
+            const terminalResult = document.getElementById('terminal-result');
+            terminalResult.style.display = 'block';
+
+            const skorFinal = totalSkor * 10;
+            document.getElementById('terminal-score').innerText = skorFinal;
+
+            const rank = document.getElementById('terminal-rank');
+            const kom = document.getElementById('terminal-commentary');
+
+            if (skorFinal >= 90) {
+                rank.innerText = "RANK: ELITE INNOVATOR";
+                rank.style.background = "linear-gradient(135deg, var(--neon-green), var(--neon-cyan))";
+                kom.innerText = "Luar biasa! Pemahaman analisis makro Anda terhadap Modul 1 TPEN4406 sudah sempurna. Anda diprediksi mampu menembus nilai A dalam UAS Universitas Terbuka.";
+            } else if (skorFinal >= 70) {
+                rank.innerText = "RANK: ADOPTER CORE";
+                rank.style.background = "linear-gradient(135deg, #ffaa00, var(--neon-cyan))";
+                kom.innerText = "Penguasaan materi aman. Anda memahami logika Atribut Rogers dan Konektivisme Siemens dengan baik, namun waspadai jebakan analisis studi kasus pada lembar ujian.";
+            } else {
+                rank.innerText = "RANK: LAGGARDS RESISTANCE";
+                rank.style.background = "linear-gradient(135deg, var(--neon-red), var(--neon-purple))";
+                kom.innerText = "Skor Anda di bawah ambang batas aman kelulusan UT. Direkomendasikan melakukan re-read menyeluruh pada halaman Kegiatan Belajar 1 terkait determinasi difusi inovasi.";
+            }
+        }
+    </script>
+</body>
+</html>

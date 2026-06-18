@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerdas Cermat Interaktif - TPEN4406 Modul 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & DESIGN SYSTEM --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #05050a;
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* --- ANIMASI MASUK (SPLASH SCREEN) --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: radial-gradient(circle, #0f1123 0%, #05050a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .splash-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #00f2fe;
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.6);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: pulseIn 1.5s forwards 0.3s;
+        }
+        .splash-sub {
+            color: #4facfe;
+            font-size: 1.5rem;
+            margin-top: 15px;
+            letter-spacing: 3px;
+            opacity: 0;
+            animation: fadeIn 1s forwards 1.2s;
+        }
+        .start-btn {
+            margin-top: 40px;
+            padding: 15px 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #fff;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.4);
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: fadeIn 1s forwards 1.8s;
+        }
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(0, 242, 254, 0.8);
+        }
+
+        /* --- MAIN INTERFACE --- */
+        .app-container {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .quiz-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid #1e293b;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 15px;
+        }
+        .progress-text {
+            font-size: 1.3rem;
+            color: #4facfe;
+        }
+        .score-board {
+            font-family: 'Orbitron', sans-serif;
+            background: #0f172a;
+            padding: 5px 20px;
+            border-radius: 12px;
+            border: 1px solid #00f2fe;
+            color: #00f2fe;
+        }
+        .question-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 35px;
+            color: #f8fafc;
+        }
+
+        /* --- OPTIONS LAYOUT --- */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .option {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 18px 25px;
+            border-radius: 14px;
+            font-size: 1.3rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+        }
+        .option:hover {
+            background: #273549;
+            border-color: #00f2fe;
+            color: #fff;
+            transform: translateX(5px);
+        }
+        
+        /* STATUS JAWABAN */
+        .option.correct {
+            background: linear-gradient(45deg, #10b981, #059669) !important;
+            border-color: #34d399 !important;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+        .option.wrong {
+            background: linear-gradient(45deg, #ef4444, #dc2626) !important;
+            border-color: #f87171 !important;
+            color: white;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* --- SCREEN SCORE AKHIR --- */
+        .result-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.8s forwards;
+        }
+        .result-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: #00f2fe;
+            margin-bottom: 20px;
+        }
+        .final-score {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 800;
+            color: #fff;
+            margin: 20px 0;
+            text-shadow: 0 0 30px rgba(0,242,254,0.5);
+        }
+
+        /* --- TIMELINE ANIMASI --- */
+        @keyframes pulseIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* --- BUTTON KEMBALI SEGITIGA --- */
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #bd00ff, #00e5ff);
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 5px 5px 15px rgba(189, 0, 255, 0.3);
+}
+
+.back-btn:hover {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
+    background: #00e5ff;
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+    </style>
+</head>
+<body>
+
+    <a href="materi.html" class="back-btn" title="Kembali">
+    <span style="font-size: 1.2rem;">◀</span>
+</a>
+
+    <audio id="sound-correct" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav" preload="auto"></audio>
+    <audio id="sound-wrong" src="https://assets.mixkit.co/active_storage/sfx/2959/2959-84.wav" preload="auto"></audio>
+
+    <div id="splash-screen">
+        <div class="splash-title">Cerdas Cermat</div>
+        <div class="splash-sub">TPEN4406 - INOVASI PEMBELAJARAN</div>
+        <button class="start-btn" onclick="startQuiz()">MULAI SIMULASI</button>
+    </div>
+
+    <div class="app-container" id="quiz-area">
+        <div class="quiz-card">
+            <div class="quiz-header">
+                <div class="progress-text" id="progress">SOAL 1 DARI 10</div>
+                <div class="score-board">SKOR: <span id="score">0</span></div>
+            </div>
+            <div class="question-text" id="question">Memuat pertanyaan...</div>
+            <div class="options-grid" id="options-container">
+                </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="result-area">
+        <div class="quiz-card result-screen" id="result-card">
+            <div class="result-title">EVALUASI SELESAI</div>
+            <p style="font-size: 1.5rem; color: #94a3b8;">Skor Akhir Ujian Mandiri Anda:</p>
+            <div class="final-score" id="score-display">0</div>
+            <p id="feedback-text" style="font-size: 1.4rem; color: #cbd5e1; margin-bottom: 30px;"></p>
+            <button class="start-btn" onclick="location.reload()">ULANGI KUIS</button>
+        </div>
+    </div>
+
+    <script>
+        // DATA SET SOAL PREDIKSI 90% KELUAR UAS UT
+        const quizData = [
+            {
+                q: "Karakteristik inovasi yang merujuk pada sejauh mana suatu ide baru dianggap lebih menguntungkan/unggul dibandingkan sistem konvensional sebelumnya disebut...",
+                a: ["A. Compatibility", "B. Relative Advantage", "C. Complexity", "D. Observability"],
+                correct: 1
+            },
+            {
+                q: "Tingkat kesulitan operasional maupun konseptual yang dirasakan pengguna dalam memahami inovasi pembelajaran dinamakan sebagai prinsip...",
+                a: ["A. Trialability", "B. Complexity", "C. Compatibility", "D. Observability"],
+                correct: 1
+            },
+            {
+                q: "Integrasi TIK mengubah struktur kelas konvensional secara revolusioner ke arah model paradigma baru yang berfokus pada...",
+                a: ["A. Teacher-Centered Learning", "B. Curriculum-Centered Learning", "C. Student-Centered Learning", "D. Administration-Centered Learning"],
+                correct: 2
+            },
+            {
+                q: "Kemampuan berpikir kritis (critical thinking), pemecahan masalah, kreativitas, serta kolaborasi digital secara terpadu merupakan elemen utama dari...",
+                a: ["A. Literasi Komputer Dasar", "B. Keterampilan Abad 21 (4Cs)", "C. Birokrasi Pendidikan Modern", "D. Teori Difusi Top-Down"],
+                correct: 1
+            },
+            {
+                q: "Individu yang lahir sebelum era digital masif namun berusaha keras beradaptasi dengan penggunaan teknologi dalam ekosistem belajar dikenal dengan istilah...",
+                a: ["A. Digital Native", "B. Digital Immigrant", "C. Digital Citizen", "D. Digital Evolutionist"],
+                correct: 1
+            },
+            {
+                q: "Proses penyebarluasan gagasan atau praktik inovasi baru melalui saluran komunikasi tertentu dari waktu ke waktu di dalam sistem sosial dinamakan...",
+                a: ["A. Difusi Inovasi", "B. Reinvensi Inovasi", "C. Diseminasi Struktural", "D. Konvergensi Pendidikan"],
+                correct: 0
+            },
+            {
+                q: "Kemungkinan bagi suatu inovasi untuk diuji coba terlebih dahulu dalam ruang lingkup terbatas sebelum diadopsi penuh mewakili karakteristik...",
+                a: ["A. Observability", "B. Trialability", "C. Complexity", "D. Compatibility"],
+                correct: 1
+            },
+            {
+                q: "Paradoks masyarakat abad 21 ditandai dengan perubahan struktural ekonomi global, dari berbasis sumber daya alam fisik bergeser menuju...",
+                a: ["A. Labor-Intensive Economy", "B. Agrarian-Based Economy", "C. Knowledge-Based Economy", "D. Traditional Trade Economy"],
+                correct: 2
+            },
+            {
+                q: "Pendekatan inovatif modern yang menggabungkan rumpun Sains, Teknologi, Teknik, Seni (Art), dan Matematika secara interdisipliner disebut...",
+                a: ["A. STEM Education", "B. Bilingual Education", "C. STEAM Education", "D. Vocational Education"],
+                correct: 2
+            },
+            {
+                q: "Pada penilaian hasil belajar berbasis TIK, model evaluasi bergeser meninggalkan tes pilihan ganda statis tradisional menuju penggunaan...",
+                a: ["A. Ujian Lisan Terbuka", "B. Portofolio Digital & Evaluasi Kinerja Otentik", "C. Sistem Absensi Otomatis", "D. Penilaian Kelompok Manual"],
+                correct: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let acceptClicks = true;
+
+        // FUNGSI ANIMASI MASUK & TRANSISI
+        function startQuiz() {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            splash.style.transform = 'scale(1.1)';
+            
+            setTimeout(() => {
+                splash.style.display = 'none';
+                const quizArea = document.getElementById('quiz-area');
+                quizArea.style.display = 'flex';
+                loadQuestion();
+            }, 800);
+        }
+
+        // FUNGSI ME-RENDER DATA SOAL
+        function loadQuestion() {
+            acceptClicks = true;
+            const currentData = quizData[currentQuestion];
+            
+            document.getElementById('progress').innerText = `SOAL ${currentQuestion + 1} DARI ${quizData.length}`;
+            document.getElementById('question').innerText = currentData.q;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            currentData.a.forEach((optionText, index) => {
+                const button = document.createElement('div');
+                button.className = 'option';
+                button.innerText = optionText;
+                button.onclick = () => checkAnswer(index, button);
+                container.appendChild(button);
+            });
+        }
+
+        // VALIDASI JAWABAN & AUDIO FEEDBACK
+        function checkAnswer(selectedIndex, selectedElement) {
+            if (!acceptClicks) return;
+            acceptClicks = false;
+            
+            const correctIndex = quizData[currentQuestion].correct;
+            const allOptions = document.querySelectorAll('.option');
+            
+            if (selectedIndex === correctIndex) {
+                selectedElement.classList.add('correct');
+                document.getElementById('sound-correct').play();
+                score += 10;
+                document.getElementById('score').innerText = score;
+            } else {
+                selectedElement.classList.add('wrong');
+                allOptions[correctIndex].classList.add('correct');
+                document.getElementById('sound-wrong').play();
+            }
+            
+            // Jeda 2 detik sebelum otomatis ganti ke soal berikutnya
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < quizData.length) {
+                    loadQuestion();
+                } else {
+                    showResult();
+                }
+            }, 2000);
+        }
+
+        // MENAMPILKAN DASHBOARD SKOR AKHIR
+        function showResult() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('result-area').style.display = 'flex';
+            document.getElementById('result-card').style.display = 'block';
+            document.getElementById('score-display').innerText = score;
+            
+            let feedback = "";
+            if (score >= 80) {
+                feedback = "Luar biasa! Pemahaman Modul 3 Anda sangat matang. Anda siap 90% menghadapi UAS UT!";
+            } else if (score >= 60) {
+                feedback = "Cukup baik, namun disarankan untuk membaca ulang bagian Teori Rogers dan Paradigma Konstruktivisme.";
+            } else {
+                feedback = "Skor Anda di bawah standar kelulusan. Pelajari kembali rangkuman PDF materi sebelum hari ujian tiba.";
+            }
+            document.getElementById('feedback-text').innerText = feedback;
+        }
+    </script>
+</body>
+</html>

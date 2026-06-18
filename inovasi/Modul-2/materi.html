@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerdas Cermat Tekno-Edukasi | TPEN4406 Modul 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --neon-blue: #00f2fe;
+            --neon-purple: #9d4edf;
+            --neon-green: #39ff14;
+            --neon-red: #ff0055;
+            --dark-core: #020617;
+            --panel-solid: #0f172a;
+            --text-white: #f8fafc;
+            --text-mute: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-core);
+            color: var(--text-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- BACKGROUND MATRIX AMBIENT --- */
+        .grid-matrix {
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(0, 242, 254, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 254, 0.015) 1px, transparent 1px);
+            background-size: 30px 30px;
+            transform: perspective(500px) rotateX(60deg);
+            top: -50%;
+            z-index: -2;
+            animation: matrixMove 25s linear infinite;
+        }
+
+        @keyframes matrixMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 1000px; }
+        }
+
+        .radial-shadow {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(157, 78, 223, 0.12) 0%, transparent 65%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            filter: blur(80px);
+        }
+
+        /* --- STAGE 1: CINEMATIC BOOTING SCREEN --- */
+        #splash-gateway {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #010409;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .glitch-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 25px rgba(0, 242, 254, 0.5);
+            letter-spacing: 6px;
+        }
+
+        .glitch-sub {
+            font-size: 1.3rem;
+            color: var(--neon-purple);
+            letter-spacing: 8px;
+            margin-top: 8px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .bar-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            margin-top: 45px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 15px var(--neon-blue);
+            animation: loadSystem 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes loadSystem {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* --- STAGE 2: MAIN HUB INTERFACE --- */
+        #central-terminal {
+            width: 95%;
+            max-width: 1100px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 2px solid var(--neon-purple);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 0 40px rgba(157, 78, 223, 0.25);
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            transform: scale(0.96);
+            transition: all 0.6s ease;
+            display: none;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed rgba(157, 78, 223, 0.3);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .terminal-title h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .control-tabs {
+            display: flex;
+            gap: 12px;
+        }
+
+        .tab-trigger {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-trigger.active, .tab-trigger:hover {
+            background: var(--neon-blue);
+            color: var(--dark-core);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        /* --- VIEW: COMPREHENSIVE TEXTS --- */
+        #view-textbook {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        @media(max-width: 768px) {
+            #view-textbook { grid-template-columns: 1fr; }
+        }
+
+        #view-textbook::-webkit-scrollbar { width: 6px; }
+        #view-textbook::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 4px; }
+
+        .text-card {
+            background: var(--panel-solid);
+            border-left: 4px solid var(--neon-blue);
+            padding: 25px;
+            border-radius: 6px;
+        }
+
+        .text-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        .text-card p, .text-card li {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .text-card ul { margin-left: 20px; }
+
+        /* --- VIEW: ARENA CERDAS CERMAT --- */
+        #view-arena {
+            display: none;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .hud-panel {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--neon-purple);
+            margin-bottom: 25px;
+            background: rgba(255,255,255,0.02);
+            padding: 12px 20px;
+            border-radius: 6px;
+            border: 1px solid rgba(157, 78, 223, 0.2);
+        }
+
+        .hud-value { color: var(--neon-blue); font-weight: bold; }
+
+        .question-cluster h2 {
+            font-size: 1.6rem;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option-node {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 18px 25px;
+            border-radius: 8px;
+            font-size: 1.15rem;
+            color: var(--text-white);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .option-node:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 242, 254, 0.04);
+            transform: translateX(6px);
+        }
+
+        .option-node.node-correct {
+            border-color: var(--neon-green) !important;
+            color: var(--neon-green);
+            background: rgba(57, 255, 20, 0.06);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.15);
+        }
+
+        .option-node.node-wrong {
+            border-color: var(--neon-red) !important;
+            color: var(--neon-red);
+            background: rgba(255, 0, 85, 0.06);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.15);
+        }
+
+        /* --- VIEW: TERMINAL EVALUASI AKHIR --- */
+        #view-evaluation {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .badge-score {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5.5rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 30px rgba(57, 255, 20, 0.4);
+            margin: 15px 0;
+        }
+
+        .feedback-text {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            color: #94a3b8;
+        }
+
+        /* Latihan Soal */
+        .btn-container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+    }
+    .btn-estetik {
+        padding: 12px 30px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+    .btn-estetik:hover {
+        background: rgba(88, 166, 255, 0.2);
+        border-color: #58a6ff;
+        box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+        transform: scale(1.05);
+    }
+    </style>
+</head>
+<body>
+
+    <div class="grid-matrix"></div>
+    <div class="radial-shadow"></div>
+
+    <div id="splash-gateway">
+        <div class="glitch-header">TPEN4406</div>
+        <div class="glitch-sub">Paradigma & Teori Belajar Modul 2</div>
+        <div class="bar-container">
+            <div class="bar-fill"></div>
+        </div>
+    </div>
+
+    <div id="central-terminal">
+        <header class="terminal-header">
+            <div class="terminal-title">
+                <h1>ARSKITEKTUR PEMBELAJARAN MODUL 2</h1>
+            </div>
+            <div class="control-tabs">
+                <button class="tab-trigger active" onclick="toggleView('textbook')"><i class="fas fa-file-alt"></i> RESUME MATERI</button>
+                <button class="tab-trigger" onclick="toggleView('arena')"><i class="fas fa-bolt"></i> ARENA KUIS</button>
+                <button class="tab-trigger" onclick="alert('Navigasi ke Latihan Soal 1')">LATIHAN 1</button>
+                <button class="tab-trigger" onclick="alert('Navigasi ke Latihan Soal 2')">LATIHAN 2</button>
+            </div>
+            <div class="btn-container">
+    <a href="soal1.html" class="btn-estetik">Latihan Soal 01</a>
+    <a href="soal2.html" class="btn-estetik">Latihan Soal 02</a>
+</div>
+        </header>
+
+        <main id="view-textbook">
+            <div class="text-card">
+                <h3>1. Pergeseran Paradigma Belajar</h3>
+                <p>UAS UT memfokuskan pengujian pada transisi struktural cara belajar:</p>
+                <ul>
+                    <li><strong>Paradigma Tradisional:</strong> Instruksi linier, pasif, berorientasi pengumpulan fakta terisolasi (*Teacher-Centered*).</li>
+                    <li><strong>Paradigma Baru:</strong> Konstruktivisme sosial, jaringan pengetahuan aktif, aplikatif kontekstual (*Student-Centered*).</li>
+                </ul>
+            </div>
+            <div class="text-card" style="border-left-color: var(--neon-purple);">
+                <h3>2. Teori Konektivisme (Siemens)</h3>
+                <p>Ilmu tidak lagi tersimpan eksklusif di memori otak manusia melainkan tersebar di simpul jaringan digital (*nodes*). Guru wajib menguasai 4 aktivitas inti:</p>
+                <ul>
+                    <li><strong>Agregasi:</strong> Menyaring dan mengumpulkan data dari rimba digital secara kritis.</li>
+                    <li><strong>Relasi:</strong> Menghubungkan pola makna antar disiplin keilmuan berbeda.</li>
+                    <li><strong>Refleksi:</strong> Memvalidasi keaslian informasi di tengah disinformasi.</li>
+                    <li><strong>Kolaborasi:</strong> Membagikan pengetahuan baru ke dalam ekosistem global.</li>
+                </ul>
+            </div>
+            <div class="text-card" style="border-left-color: var(--neon-green);">
+                <h3>3. Kompetensi Esensial 4Cs</h3>
+                <p>Indikator utama pembentukan kecakapan tingkat tinggi mahasiswa:</p>
+                <ul>
+                    <li><strong>Critical Thinking:</strong> Mampu memecahkan problem non-rutin berdasarkan data valid.</li>
+                    <li><strong>Creativity:</strong> Fleksibilitas kognitif untuk melahirkan pembaruan metode kerja.</li>
+                    <li><strong>Communication:</strong> Transmisi gagasan akurat lintas platform multi-media.</li>
+                    <li><strong>Collaboration:</strong> Manajemen ego kerja tim dalam menyelesaikan proyek sosial heterogen.</li>
+                </ul>
+            </div>
+            <div class="text-card" style="border-left-color: #f59e0b;">
+                <h3>4. Ekosistem Ubiquitous Learning</h3>
+                <p>Lingkungan belajar masa depan menanggalkan sekat ruang fisik kelas konvensional. Guru bertindak sebagai <strong>Orchestrator</strong> lingkungan belajar yang bersifat *Ubiquitous* (omnipresen, dapat diakses kapan saja dan di mana saja melalui integrasi teknologi pintar).</p>
+            </div>
+        </main>
+
+        <main id="view-arena">
+            <div id="quiz-flow">
+                <div class="hud-panel">
+                    <div>MATRIKS SOAL: <span class="hud-value" id="hud-idx">01/10</span></div>
+                    <div>SKOR METRIKS: <span class="hud-value" id="hud-score">000</span></div>
+                </div>
+                <div class="question-cluster">
+                    <h2 id="question-text">Memuat sistem pangkalan data...</h2>
+                    <div class="options-grid" id="options-dock"></div>
+                </div>
+            </div>
+
+            <div id="view-evaluation">
+                <h2 style="font-family:'Orbitron'; color:var(--neon-blue); letter-spacing:2px;">EVALUASI AKHIR UAS UT</h2>
+                <div class="badge-score" id="final-score-num">000</div>
+                <p class="feedback-text" id="final-feedback-txt"></p>
+                <button class="tab-trigger" style="border-color:var(--neon-purple); color:var(--neon-purple);" onclick="location.reload()">BOOT RESTART</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // TERMINASI ANIMASI GERBANG MASUK
+        setTimeout(() => {
+            const spl = document.getElementById('splash-gateway');
+            const hub = document.getElementById('central-terminal');
+            spl.style.opacity = '0';
+            spl.style.transform = 'translateY(-100%)';
+            setTimeout(() => {
+                spl.style.display = 'none';
+                hub.style.display = 'block';
+                setTimeout(() => { hub.style.opacity = '1'; hub.style.transform = 'scale(1)'; }, 50);
+            }, 800);
+        }, 2600);
+
+        // DATASET KUIS TINGKAT MAHASISWA - 10 SOAL PREDIKTIF AKURASI 90% KELUAR UAS UT MODUL 2
+        const questionsDatabase = [
+            {
+                q: "Dalam pergeseran paradigma belajar abad ke-21, perbedaan mendasar struktur materi kurikulum masa depan dibandingkan model tradisional terletak pada...",
+                a: "Penyusunan materi yang terintegrasi secara interdisipliner dengan konteks nyata",
+                options: ["Pengorganisasian bab yang terisolasi ketat antar mata pelajaran", "Penyusunan materi yang terintegrasi secara interdisipliner dengan konteks nyata", "Penekanan penuh pada penguasaan hafalan teks definitif secara berjenjang", "Pembatasan sumber ajar utama hanya pada diktat atau buku paket cetak"]
+            },
+            {
+                q: "George Siemens mengemukakan Teori Konektivisme untuk mengkritik batasan teori Behaviorisme dan Kognitivisme. Asumsi klasik apa yang ditolak oleh Konektivisme?",
+                a: "Bahwa proses belajar hanya terjadi di dalam batasan kognisi internal individu",
+                options: ["Bahwa stimulasi eksternal mampu memicu perubahan perilaku nyata", "Bahwa pemrosesan informasi dipengaruhi oleh skema memori jangka pendek", "Bahwa proses belajar hanya terjadi di dalam batasan kognisi internal individu", "Bahwa interaksi sosial mempercepat pemahaman bermakna peserta didik"]
+            },
+            {
+                q: "Seorang mahasiswa menyaring puluhan artikel e-journal, memisahkan rujukan valid dari opini personal untuk menyusun bahan ujian. Tindakan ini mencerminkan aktivitas konektivitas pada pilar...",
+                a: "Agregasi (Aggregation)",
+                options: ["Agregasi (Aggregation)", "Relasi (Relation)", "Refleksi (Reflection)", "Kolaborasi (Collaboration)"]
+            },
+            {
+                q: "Ketika peserta didik mulai mampu mengidentifikasi dan menarik benang merah hubungan fungsional antara konsep neurosains di video YouTube dengan strategi manajemen kelas di modul, ia berada pada fase...",
+                a: "Relasi (Relation)",
+                options: ["Agregasi (Aggregation)", "Relasi (Relation)", "Refleksi (Reflection)", "Kolaborasi (Collaboration)"]
+            },
+            {
+                q: "Dari perspektif Kompetensi Abad ke-21 (The 4Cs), kapabilitas apa yang diuji ketika mahasiswa dituntut mampu mengambil keputusan logis di bawah situasi data yang tidak lengkap atau ambigu?",
+                a: "Critical Thinking (Berpikir Kritis)",
+                options: ["Critical Thinking (Berpikir Kritis)", "Creativity (Kreativitas)", "Communication (Komunikasi)", "Collaboration (Kolaborasi)"]
+            },
+            {
+                q: "Manakah desain penugasan di kelas yang paling valid untuk menguji dan menumbuhkan dimensi 'Collaboration' tingkat tinggi pada lingkungan heterogen?",
+                a: "Menugaskan tim memecahkan kasus sosial lokal dengan pembagian peran berbasis keahlian individu",
+                options: ["Menginstruksikan siswa melakukan hafalan teks proklamasi secara bergantian", "Menugaskan tim memecahkan kasus sosial lokal dengan pembagian peran berbasis keahlian individu", "Meminta siswa mengoreksi lembar jawaban ujian milik teman sebangkunya", "Menyelenggarakan kompetensi cerdas cermat individu dengan sistem gugur ketat"]
+            },
+            {
+                q: "Evolusi peran dosen di era digital digambarkan sebagai pergeseran dari 'Sage on the Stage' menjadi 'Guide on the Side'. Implikasi praktis terminologi tersebut adalah...",
+                a: "Dosen bertindak sebagai fasilitator dan orchestrator navigasi pencarian informasi",
+                options: ["Dosen membiarkan proses pembelajaran berjalan mandiri tanpa evaluasi terstruktur", "Dosen memposisikan diri sebagai satu-satunya otoritas kebenaran ilmiah tunggal", "Dosen bertindak sebagai fasilitator dan orchestrator navigasi pencarian informasi", "Dosen memfokuskan sebagian besar waktu mengajar untuk metode ceramah klasikal"]
+            },
+            {
+                q: "Lingkungan pembelajaran masa depan dituntut memiliki karakteristik 'Ubiquitous'. Karakter operasional utama yang membedakannya dengan model kelas fisik adalah...",
+                a: "Aksesibilitas omnipresen yang menghilangkan hambatan ruang fisik dan batasan waktu",
+                options: ["Ketergantungan penuh pada lisensi perangkat lunak berbayar paling mahal", "Aksesibilitas omnipresen yang menghilangkan hambatan ruang fisik dan batasan waktu", "Kewajiban tatap muka secara sinkronus sepanjang jam kerja institusi", "Sentralisasi seluruh aktivitas belajar di ruang laboratorium induk kampus"]
+            },
+            {
+                q: "Inovasi kurikulum berbasis teknologi sering kali gagal total akibat penolakan laten berupa 'Mental Block' dari pendidik senior. Strategi taktis apa yang paling direkomendasikan berdasarkan modul 2?",
+                correct: "Membuktikan fungsionalitas nyata inovasi melalui projek percontohan berskala kecil",
+                options: ["Menerapkan sanksi pemotongan tunjangan kerja secara mendadak", "Menghapus total seluruh perangkat kurikulum lama secara serentak", "Membuktikan fungsionalitas nyata inovasi melalui projek percontohan berskala kecil", "Mewajibkan penggunaan sistem operasional baru tanpa bimbingan teknis"]
+            },
+            {
+                q: "Pilar konektivisme 'Refleksi' (Reflection) memiliki urgensi krusial di era ledakan data digital karena berfungsi sebagai alat untuk...",
+                a: "Memvalidasi orisinalitas, kebenaran, dan kegunaan praktis paket informasi yang diperoleh",
+                options: ["Menyebarluaskan opini pribadi secara masif ke media sosial publik", "Memvalidasi orisinalitas, kebenaran, dan kegunaan praktis paket informasi yang diperoleh", "Menghitung durasi pemakaian kuota data internet saat belajar mandiri", "Menggandakan dokumen digital milik orang lain tanpa mencantumkan sumber"]
+            }
+        ];
+
+        let indexSoal = 0;
+        let skorAkumulasi = 0;
+        let switchLock = false;
+
+        function toggleView(target) {
+            const txtSec = document.getElementById('view-textbook');
+            const arnSec = document.getElementById('view-arena');
+            const triggers = document.querySelectorAll('.tab-trigger');
+
+            triggers.forEach(t => t.classList.remove('active'));
+            if(target === 'textbook') {
+                txtSec.style.display = 'grid';
+                arnSec.style.display = 'none';
+                triggers[0].classList.add('active');
+            } else {
+                txtSec.style.display = 'none';
+                arnSec.style.display = 'block';
+                triggers[1].classList.add('active');
+                initiateQuizEngine();
+            }
+        }
+
+        function initiateQuizEngine() {
+            switchLock = false;
+            const currentQuestion = questionsDatabase[indexSoal];
+            
+            document.getElementById('hud-idx').innerText = `${String(indexSoal + 1).padStart(2, '0')}/${String(questionsDatabase.length).padStart(2, '0')}`;
+            document.getElementById('question-text').innerText = currentQuestion.q;
+
+            const dock = document.getElementById('options-dock');
+            dock.innerHTML = '';
+
+            // Pengacakan Pilihan Jawaban
+            const randomizedOptions = [...currentQuestion.options].sort(() => Math.random() - 0.5);
+
+            randomizedOptions.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-node';
+                btn.innerHTML = `<span style="color:var(--neon-blue); margin-right:12px; font-family:'Orbitron'">${String.fromCharCode(65 + i)}.</span> ${opt}`;
+                btn.onclick = () => evaluateResponse(btn, opt);
+                dock.appendChild(btn);
+            });
+        }
+
+        function evaluateResponse(selectedBtn, selectedValue) {
+            if(switchLock) return;
+            switchLock = true;
+
+            // Handle Key validation dynamically for index 8
+            const correctKey = (indexSoal === 8) ? questionsDatabase[indexSoal].correct : questionsDatabase[indexSoal].a;
+            const nodes = document.getElementsByClassName('option-node');
+
+            if(selectedValue === correctKey) {
+                skorAkumulasi += 10;
+                selectedBtn.classList.add('node-correct');
+                document.getElementById('hud-score').innerText = String(skorAkumulasi * 10).padStart(3, '0');
+            } else {
+                selectedBtn.classList.add('node-wrong');
+                Array.from(nodes).forEach(n => {
+                    if(n.innerText.substring(3).trim() === correctKey) n.classList.add('node-correct');
+                });
+            }
+
+            setTimeout(() => {
+                indexSoal++;
+                if(indexSoal < questionsDatabase.length) {
+                    initiateQuizEngine();
+                } else {
+                    renderFinalEvaluation();
+                }
+            }, 2000);
+        }
+
+        function renderFinalEvaluation() {
+            document.getElementById('quiz-flow').style.display = 'none';
+            const screen = document.getElementById('view-evaluation');
+            screen.style.display = 'block';
+
+            const finalCalculatedScore = skorAkumulasi * 10;
+            document.getElementById('final-score-num').innerText = finalCalculatedScore;
+
+            const txtElement = document.getElementById('final-feedback-txt');
+            if(finalCalculatedScore >= 90) {
+                txtElement.innerText = "Status Prediksi Kelulusan: Unggul Mutlak (Nilai A). Penguasaan analisis makro Anda terhadap paradigma belajar abad 21, Teori Konektivisme Siemens, serta arsitektur Ubiquitous Learning telah berada di tingkat master.";
+            } else if (finalCalculatedScore >= 70) {
+                txtElement.innerText = "Status Prediksi Kelulusan: Kompeten Kompetitif (Nilai B). Anda memiliki pemahaman logika konseptual yang solid, namun disarankan memperdalam analisis perbedaan implementasi antar pilar aktivitas konektivitas.";
+            } else {
+                txtElement.innerText = "Status Prediksi Kelulusan: Resiko Akademik (Di bawah ambang kelulusan). Direkomendasikan melakukan re-read mendalam pada lembar resume naskah di tab kiri sebelum menghadapi lembar ujian asli UT.";
+            }
+        }
+    </script>
+</body>
+</html>

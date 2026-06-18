@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerdas Cermat Futuristik - TPEN4406 Modul 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CORE CONFIGURATION --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #040209;
+            background: radial-gradient(circle at center, #0f0728 0%, #03010a 100%);
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- 1. INTRO SPLASH SCREEN (ANIMASI MASUK) --- */
+        #intro-stage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #03010a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .neon-shield {
+            text-align: center;
+            border: 2px dashed #00e5ff;
+            padding: 40px 60px;
+            border-radius: 24px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+            animation: pulseGlow 2s infinite alternate;
+        }
+        .title-flash {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #00e5ff;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+            letter-spacing: 4px;
+        }
+        .subtitle-flash {
+            font-size: 1.4rem;
+            color: #bd00ff;
+            margin-top: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(189, 0, 255, 0.5);
+        }
+        .start-btn {
+            margin-top: 40px;
+            padding: 16px 45px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(45deg, #bd00ff, #00e5ff);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .start-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 40px rgba(189, 0, 255, 0.8);
+        }
+
+        /* --- 2. CERDAS CERMAT ARENA CONTAINER --- */
+        .arena-box {
+            display: none;
+            width: 90%;
+            max-width: 950px;
+            background: rgba(14, 10, 31, 0.9);
+            border: 2px solid #231942;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(189, 0, 255, 0.15);
+            backdrop-filter: blur(12px);
+            animation: stageAppear 0.5s ease-out forwards;
+        }
+        .arena-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #231942;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .indicator-pill {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            background: #120c24;
+            padding: 6px 18px;
+            border-radius: 12px;
+            border: 1px solid #bd00ff;
+            color: #bd00ff;
+        }
+        .score-pill {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            background: #091724;
+            padding: 6px 22px;
+            border-radius: 12px;
+            border: 1px solid #00e5ff;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+        }
+
+        /* PERTANYAAN */
+        .question-screen {
+            background: #0b071a;
+            border-left: 6px solid #00e5ff;
+            padding: 30px;
+            border-radius: 14px;
+            margin-bottom: 30px;
+        }
+        .question-txt {
+            font-size: 1.7rem;
+            font-weight: 700;
+            line-height: 1.4;
+            color: #f1f5f9;
+        }
+
+        /* PILIHAN JAWABAN */
+        .choices-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .choice-row {
+            background: #160f29;
+            border: 1px solid #2d1f4d;
+            border-radius: 12px;
+            padding: 20px 25px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        .choice-row:hover {
+            background: #231942;
+            border-color: #00e5ff;
+            color: #fff;
+            transform: translateX(5px);
+        }
+        .choice-abc {
+            font-family: 'Orbitron', sans-serif;
+            color: #00e5ff;
+            font-weight: 900;
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* STATUS VALIDASI KUIS */
+        .choice-row.correct-node {
+            background: linear-gradient(45deg, #047857, #10b981) !important;
+            border-color: #34d399 !important;
+            color: #fff !important;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+        .choice-row.wrong-node {
+            background: linear-gradient(45deg, #b91c1c, #ef4444) !important;
+            border-color: #f87171 !important;
+            color: #fff !important;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            animation: shake 0.3s linear;
+        }
+
+        /* --- 3. RESULTS DISPLAY PANEL --- */
+        .summary-display {
+            display: none;
+            text-align: center;
+        }
+        .summary-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: #00e5ff;
+            margin-bottom: 10px;
+        }
+        .grand-score {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5.5rem;
+            font-weight: 900;
+            color: #bd00ff;
+            margin: 20px 0;
+            text-shadow: 0 0 25px rgba(189, 0, 255, 0.5);
+        }
+        .feedback-paragraph {
+            font-size: 1.4rem;
+            color: #94a3b8;
+            max-width: 650px;
+            margin: 0 auto 35px auto;
+            line-height: 1.5;
+        }
+
+        /* --- ANIMATION SEQUENCES --- */
+        @keyframes pulseGlow {
+            0% { border-color: #00e5ff; box-shadow: 0 0 20px rgba(0, 229, 255, 0.1); }
+            100% { border-color: #bd00ff; box-shadow: 0 0 30px rgba(189, 0, 255, 0.4); }
+        }
+        @keyframes stageAppear {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @media (max-width: 768px) {
+            .title-flash { font-size: 2.2rem; }
+            .question-txt { font-size: 1.3rem; }
+            .choice-row { font-size: 1.1rem; }
+        }
+
+        /* --- BUTTON KEMBALI SEGITIGA --- */
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #bd00ff, #00e5ff);
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 5px 5px 15px rgba(189, 0, 255, 0.3);
+}
+
+.back-btn:hover {
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 0 25px rgba(0, 229, 255, 0.6);
+    background: #00e5ff;
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+    </style>
+</head>
+<body>
+
+    <a href="materi.html" class="back-btn" title="Kembali">
+    <span style="font-size: 1.2rem;">◀</span>
+</a>
+
+    <div id="intro-stage">
+        <div class="neon-shield">
+            <div class="title-flash">CERDAS CERMAT</div>
+            <div class="subtitle-flash">TPEN4406 INOVASI PEMBELAJARAN (MODUL 4)</div>
+            <button class="start-btn" onclick="initiateQuiz()">MULAI SIMULASI UAS</button>
+        </div>
+    </div>
+
+    <div class="arena-box" id="main-arena">
+        <div class="arena-header">
+            <div class="indicator-pill" id="track-number">SOAL 1 / 10</div>
+            <div class="score-pill">SCORE: <span id="track-score">0</span></div>
+        </div>
+        
+        <div class="question-screen">
+            <div class="question-txt" id="field-question">Memuat soal uji kompetensi...</div>
+        </div>
+
+        <div class="choices-layout" id="field-choices">
+            </div>
+    </div>
+
+    <div class="arena-box summary-display" id="summary-arena">
+        <div class="summary-title">REKAPITULASI HASIL</div>
+        <p style="font-size: 1.2rem; color: #64748b; letter-spacing: 1px;">TOTAL SKOR AKHIR</p>
+        <div class="grand-score" id="board-score">0</div>
+        <div class="feedback-paragraph" id="board-feedback">Mengevaluasi rekam jawaban...</div>
+        <button class="start-btn" onclick="window.location.reload()">COBA KEMBALI</button>
+    </div>
+
+    <script>
+        // KUMPULAN SOAL STRATEGIS PREDIKSI 90% KELUAR UAS UT MODUL 4
+const masterQuestions = [
+    {
+        q: "Tingkat kapasitas atau kecenderungan suatu komunitas/lembaga untuk berpartisipasi dan memanfaatkan nilai strategis dari kemajuan Teknologi Informasi dan Komunikasi disebut...",
+        a: ["E-Learning Ecosystem", "E-Readiness (Kesiapan TIK)", "Digital Literacy Paradigm", "Technological Infiltration"],
+        c: 1 // Jawaban B (Indeks 1)
+    },
+    {
+        q: "Kesiapan e-readiness dalam dunia pendidikan tidak boleh hanya diukur berdasarkan indikator ketersediaan alat fisik, melainkan hal paling mendasar yang harus disiapkan adalah...",
+        a: ["Ketersediaan bandwidth internet berkapasitas besar", "Perangkat keras (hardware) berspesifikasi tinggi", "Kesiapan mental, budaya belajar, dan kompetensi SDM", "Kebijakan pendanaan pengadaan laboratorium komputer"],
+        c: 2 // Jawaban C (Indeks 2)
+    },
+    {
+        q: "Salah satu komponen psikologis-kognitif yang menentukan kesiapan peserta didik dalam belajar mandiri via online adalah 'Self-Efficacy', yang bermakna...",
+        a: ["Motivasi eksternal siswa untuk memperoleh nilai tinggi", "Keyakinan diri siswa bahwa mereka mampu menguasai TIK dan menuntaskan tugas belajarnya", "Kecakapan siswa dalam mengabaikan gangguan lingkungan luar", "Kemampuan siswa dalam membeli paket data internet"],
+        c: 1 // Jawaban B (Indeks 1)
+    },
+    {
+        q: "Metode pemrosesan informasi digital di mana siswa menjabarkan, mengaitkan materi baru dengan pengetahuan lama, serta membuat peta konsep digital merupakan bagian dari strategi kognitif...",
+        a: ["Rehearsal Strategy", "Elaboration Strategy", "Organization Strategy", "Effort Regulation Strategy"],
+        c: 1 // Jawaban B (Indeks 1) - Jika yang dimaksud adalah Elaborasi
+    },
+    {
+        q: "Ketika seorang mahasiswa UT mampu mengontrol waktu belajar, mengatur lingkungan belajar yang kondusif di rumah, serta mengevaluasi perkembangannya sendiri, maka ia telah menerapkan...",
+        a: ["Metacognitive Self-Regulation (Regulasi Diri)", "Help Seeking Mechanism", "Peer Learning Interaction", "Intrinsic Goal Orientation"],
+        c: 0 // Jawaban A (Indeks 0)
+    },
+    {
+        q: "Institusi pendidikan yang beralih menuju inovasi e-learning harus melewati beberapa fase. Fase di mana guru aktif mencari, memodifikasi, dan memperoleh sumber belajar digital secara mandiri disebut...",
+        a: ["Fase Peningkatan Kompetensi dasar TIK", "Fase Pengembangan Sumber Daya (Resource Development)", "Fase Integrasi Struktural Top-Down", "Fase Evaluasi Non-Tradisional"],
+        c: 1 // Jawaban B (Indeks 1)
+    },
+    {
+        q: "Implementasi TIK memicu perubahan mendasar pada peran pendidik di dalam kelas. Pergeseran tersebut mengubah peran guru dari penyampai informasi tunggal menjadi...",
+        a: ["Pengawas administratif kurikulum kaku", "Fasilitator kegiatan belajar peserta didik", "Satu-satunya produsen konten instruksional", "Penguji hafalan materi modul cetak"],
+        c: 1 // Jawaban B (Indeks 1)
+    },
+    {
+        q: "Upaya membangun jaringan antarsekolah (SchoolNets) untuk mendorong pemanfaatan platform Open Source dan Open Educational Resources (OER) merupakan langkah pengembangan TIK pada level...",
+        a: ["Individu Siswa", "Keluarga Peserta Didik", "Kelembagaan / Institusional Jaringan", "Kementerian Sektoral Pusat"],
+        c: 2 // Jawaban C (Indeks 2)
+    },
+    {
+        q: "Aspek 'Regulasi Usaha' (Effort Regulation) dalam komponen belajar mandiri berbasis TIK mengindikasikan kemampuan siswa untuk...",
+        a: ["Mencari bantuan teknis saat sistem e-learning eror", "Berdiskusi aktif dengan teman sejawat melalui forum diskusi", "Mempertahankan fokus dan komitmen belajar meskipun menghadapi materi yang sulit", "Mengunduh seluruh materi modul dalam satu waktu bersamaan"],
+        c: 2 // Jawaban C (Indeks 2)
+    },
+    {
+        q: "Strategi belajar mandiri dengan mengulang-ulang membaca teks digital atau mencatat kembali ringkasan kalimat tanpa melakukan modifikasi konseptual dikategorikan sebagai...",
+        a: ["Elaboration Strategy", "Rehearsal Strategy", "Organization Strategy", "Metacognitive Strategy"],
+        c: 1 // Jawaban B (Indeks 1)
+    }
+];
+
+        let currentIdx = 0;
+        let cumulativeScore = 0;
+        let interactionAllowed = true;
+
+        // FUNGSI ANIMASI MASUK / TRIGGER MULAI
+        function initiateQuiz() {
+            const entryStage = document.getElementById('intro-stage');
+            entryStage.style.opacity = '0';
+            entryStage.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                entryStage.style.display = 'none';
+                document.getElementById('main-arena').style.display = 'block';
+                renderChallenge();
+            }, 700);
+        }
+
+        // RENDER PERTANYAAN
+        function renderChallenge() {
+            interactionAllowed = true;
+            const item = masterQuestions[currentIdx];
+            
+            document.getElementById('track-number').innerText = `SOAL ${currentIdx + 1} / ${masterQuestions.length}`;
+            document.getElementById('field-question').innerText = item.q;
+            
+            const layout = document.getElementById('field-choices');
+            layout.innerHTML = '';
+            
+            const prefixes = ['A', 'B', 'C', 'D'];
+            item.a.forEach((choiceTxt, idx) => {
+                const row = document.createElement('div');
+                row.className = 'choice-row';
+                row.innerHTML = `<span class="choice-abc">${prefixes[idx]}</span> ${choiceTxt}`;
+                row.onclick = () => validateSelection(idx, row);
+                layout.appendChild(row);
+            });
+        }
+
+        // EVALUASI JAWABAN
+        function validateSelection(chosenIdx, elementNode) {
+            if (!interactionAllowed) return;
+            interactionAllowed = false;
+            
+            const correctAnsIdx = masterQuestions[currentIdx].c;
+            const nodes = document.querySelectorAll('.choice-row');
+            
+            if (chosenIdx === correctAnsIdx) {
+                elementNode.classList.add('correct-node');
+                cumulativeScore += 10;
+                document.getElementById('track-score').innerText = cumulativeScore;
+            } else {
+                elementNode.classList.add('wrong-node');
+                nodes[correctAnsIdx].classList.add('correct-node');
+            }
+            
+            // Jeda transisi 2 detik menuju soal berikutnya (Gaya Cerdas Cermat TV)
+            setTimeout(() => {
+                currentIdx++;
+                if (currentIdx < masterQuestions.length) {
+                    renderChallenge();
+                } else {
+                    terminateAndShowScore();
+                }
+            }, 2000);
+        }
+
+        // SHOW SCORE PANEL AKHIR
+        function terminateAndShowScore() {
+            document.getElementById('main-arena').style.display = 'none';
+            document.getElementById('summary-arena').style.display = 'block';
+            document.getElementById('board-score').innerText = cumulativeScore;
+            
+            let message = "";
+            if (cumulativeScore >= 80) {
+                message = "🎯 LUAR BIASA! Tingkat Kesiapan E-Readiness Anda sempurna. Anda diprediksi lulus dengan nilai maksimal pada materi Modul 4 di UAS Universitas Terbuka!";
+            } else if (cumulativeScore >= 60) {
+                message = "⚠️ EVALUASI: Pemahaman Anda sudah cukup aman, namun disarankan meninjau kembali materi regulasi diri mahasiswa (Metacognitive Self-Regulation).";
+            } else {
+                message = "🚨 PERINGATAN ACADEMIC: Skor Anda berada di bawah batas ketuntasan. Pelajari kembali poin-poin penting pada modul teks sebelum menempuh ujian sesungguhnya.";
+            }
+            document.getElementById('board-feedback').innerText = message;
+        }
+    </script>
+</body>
+</html>

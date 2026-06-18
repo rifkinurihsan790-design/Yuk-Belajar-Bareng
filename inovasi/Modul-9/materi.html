@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul 9: Inovasi Pembelajaran - TPEN4406</title>
+    <style>
+        :root { --neon: #00f2fe; --bg: #05070a; --card: #0d1117; --text: #e6edf3; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; }
+        
+        /* Intro Animasi */
+        #intro { position: fixed; inset: 0; background: #000; z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 1s; }
+        .glitch { font-size: 3rem; font-weight: 800; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin-bottom: 20px; }
+        .btn-enter { padding: 15px 40px; border: 2px solid var(--neon); background: transparent; color: var(--neon); cursor: pointer; border-radius: 50px; font-weight: bold; }
+
+        /* Main Content */
+        .container { max-width: 900px; margin: 50px auto; padding: 20px; opacity: 0; transition: 1s; }
+        .card { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid #30363d; margin-bottom: 30px; }
+        h1, h2 { color: var(--neon); }
+        li { margin-bottom: 15px; line-height: 1.6; }
+        .highlight { color: #58a6ff; font-weight: bold; }
+
+        /* Latihan Soal */
+        .btn-container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+    }
+    .btn-estetik {
+        padding: 12px 30px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+    }
+    .btn-estetik:hover {
+        background: rgba(88, 166, 255, 0.2);
+        border-color: #58a6ff;
+        box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+        transform: scale(1.05);
+    }
+    </style>
+</head>
+<body>
+
+<div id="intro">
+    <div class="glitch">MODUL 9 INTERACTIVE</div>
+    <button class="btn-enter" onclick="start()">MASUK KE MATERI</button>
+</div>
+
+<div class="container" id="content">
+    <div class="card">
+        <h1>Modul 9: Pengembangan Rancangan Pembelajaran Berbasis TIK</h1>
+        <p>Ringkasan materi komprehensif untuk persiapan UAS TPEN4406.</p>
+    </div>
+
+    <div class="btn-container">
+    <a href="soal1.html" class="btn-estetik">Latihan Soal 01</a>
+    <a href="soal2.html" class="btn-estetik">Latihan Soal 02</a>
+</div>
+
+    <div class="card">
+        <h2>1. Kerangka Kerja TPACK (Inti Materi)</h2>
+        <p>Integrasi teknologi dalam pembelajaran memerlukan pemahaman domain pengetahuan:</p>
+        
+
+[Image of TPACK framework diagram]
+
+        <ul>
+            <li><span class="highlight">CK (Content Knowledge):</span> Penguasaan materi pelajaran.</li>
+            <li><span class="highlight">PK (Pedagogical Knowledge):</span> Strategi/metode mengajar.</li>
+            <li><span class="highlight">TK (Technology Knowledge):</span> Kecakapan alat digital.</li>
+            <li><span class="highlight">TPACK:</span> Irisan integrasi sempurna di mana guru tahu menggunakan teknologi yang tepat untuk materi dan metode yang tepat.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>2. Prosedur Pengembangan RPP Berbasis TIK</h2>
+        <ul>
+            <li><span class="highlight">Analisis Karakteristik Siswa:</span> Pemetaan kemampuan awal dan kesiapan teknologi (*tech-readiness*).</li>
+            <li><span class="highlight">Pendekatan Tematik (SD):</span> Penggunaan teknologi sebagai jembatan antar mata pelajaran.</li>
+            <li><span class="highlight">Langkah RPP:</span> Pendahuluan (Video pemantik), Inti (Kolaborasi digital), Penutup (Refleksi).</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function start() {
+        document.getElementById('intro').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('content').style.opacity = '1';
+        }, 1000);
+    }
+</script>
+</body>
+</html>
