@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian UAS</title>
+    <style>
+        body { 
+            margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', sans-serif; color: white;
+        }
+        .card { 
+            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);
+            padding: 40px; border-radius: 20px; text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn { 
+            display: block; background: white; color: #764ba2; padding: 15px 30px;
+            margin: 15px 0; border-radius: 50px; text-decoration: none;
+            font-weight: bold; transition: 0.3s;
+        }
+        .btn:hover { transform: scale(1.05); background: #f0f0f0; }
+        .back-link { margin-top: 20px; font-size: 30px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Pilih Sesi Ujian</h1>
+        <a href="1/index.html" class="btn">Latihan UAS 1</a>
+        <a href="#" class="btn">Latihan UAS 2</a>
+        <a href="https://rifkinurihsan790-design.github.io/Yuk-Belajar-Bareng/inovasi/inovasi.html" style="
+        display: inline-block;
+        padding: 12px 30px;
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.3s;
+        cursor: pointer;
+    " onmouseover="this.style.background='white'; this.style.color='#764ba2';" 
+       onmouseout="this.style.background='transparent'; this.style.color='white';">
+        Kembali ke Menu
+    </a>
+    </div>
+    
+</body>
+</html>
