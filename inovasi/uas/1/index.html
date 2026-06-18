@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Akhir Semester</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-info">
+                <h1>UAS Inovasi Pembelajaran</h1>
+                <p>Silakan jawab dengan teliti.</p>
+            </div>
+            <div id="timer" class="timer-box">Waktu: 120:00</div>
+        </header>
+
+        <form id="quizForm">
+            <div id="questionsContainer"></div>
+            <button type="submit" id="submitBtn">Kirim Jawaban</button>
+        </form>
+
+        <div id="result" class="hidden">
+            <h2>Hasil Ujian Anda</h2>
+            <div class="score-card">
+                Skor: <span id="score">0</span> / 50
+            </div>
+            <a href="https://rifkinurihsan790-design.github.io/Yuk-Belajar-Bareng/inovasi/uas/latihan.html" class="btn-back">Kembali ke Halaman Utama</a>
+            <button onclick="location.reload()">Ulangi Ujian</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

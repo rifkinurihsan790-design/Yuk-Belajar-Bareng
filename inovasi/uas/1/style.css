@@ -1,0 +1,91 @@
+:root {
+    --primary: #2c3e50;
+    --accent: #3498db;
+    --bg: #f8f9fa;
+}
+
+body { 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    background: var(--bg); 
+    line-height: 1.6; 
+    margin: 0; 
+    padding: 10px; 
+}
+
+.container { 
+    max-width: 700px; 
+    margin: 20px auto; 
+    background: white; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+}
+
+header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--bg);
+    padding-bottom: 20px;
+}
+
+.timer-box { 
+    font-weight: 700; 
+    background: #e74c3c; 
+    color: white; 
+    padding: 8px 15px; 
+    border-radius: 20px; 
+}
+
+.question { margin-bottom: 25px; }
+.question p { font-weight: 600; color: var(--primary); }
+
+.options label { 
+    display: block; 
+    padding: 12px; 
+    margin: 8px 0; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    transition: 0.3s;
+}
+
+.options label:hover { background: #f0f7ff; border-color: var(--accent); }
+
+button { 
+    background: var(--primary); 
+    color: white; 
+    padding: 15px; 
+    border: none; 
+    width: 100%; 
+    border-radius: 8px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    margin-top: 20px;
+}
+
+.score-card { font-size: 2em; font-weight: bold; color: var(--accent); margin: 20px 0; }
+.hidden { display: none; }
+
+/* Responsif untuk HP */
+@media (max-width: 480px) {
+    .container { padding: 15px; }
+    h1 { font-size: 1.2em; }
+    .timer-box { font-size: 0.8em; padding: 5px 10px; }
+}
+
+.btn-back {
+    display: inline-block;
+    background: #7f8c8d; /* Warna abu-abu elegan */
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-back:hover {
+    background: #626e6f;
+}
