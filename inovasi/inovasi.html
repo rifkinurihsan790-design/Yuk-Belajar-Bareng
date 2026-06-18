@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Digital TPEN4406</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #38bdf8;
+            --secondary: #a855f7;
+            --uas-color: #ff007f;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* POP-UP STYLING */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.5s ease;
+        }
+
+        .popup-content {
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            animation: popupIn 0.4s forwards ease-out;
+        }
+
+        @keyframes popupIn { hash { transform: scale(1); } to { transform: scale(1); } }
+
+        .popup-content h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .popup-content p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .popup-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+            transition: 0.3s;
+        }
+
+        .popup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+        }
+
+        /* MAIN DASHBOARD STYLING */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 30%, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* SPECIAL UAS CARD STYLING */
+        .uas-section {
+            margin-bottom: 40px;
+        }
+
+        .uas-card {
+            background: linear-gradient(135deg, rgba(255, 0, 127, 0.1), rgba(168, 85, 247, 0.15));
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 0, 127, 0.4);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 25px rgba(255, 0, 127, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .uas-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 35px rgba(255, 0, 127, 0.4);
+            border-color: rgba(255, 0, 127, 0.7);
+        }
+
+        .uas-info h2 {
+            margin: 0 0 8px 0;
+            font-size: 26px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        .uas-info p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .btn-uas {
+            padding: 16px 35px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--uas-color), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4);
+            transition: 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-uas:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 0, 127, 0.6);
+        }
+
+        /* GRID MODUL STYLING */
+        .grid-modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header h3 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .card-header p {
+            margin: 0 0 25px 0;
+            font-size: 14px;
+            color: var(--text-muted);
+            min-height: 40px;
+        }
+
+        .btn-akses {
+            display: block;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s ease;
+        }
+
+        .btn-akses:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+            border-color: transparent;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE BREAKPOINT */
+        @media (max-width: 768px) {
+            .uas-card { flex-direction: column; text-align: center; gap: 20px; }
+            .btn-uas { width: 100%; box-sizing: border-box; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- INTERACTIVE WELCOME POP-UP -->
+    <div class="popup-overlay" id="welcomePopup">
+        <div class="popup-content">
+            <h2>Selamat Datang! 👋</h2>
+            <p>Selamat datang di Portal Belajar Digital TPEN4406 Inovasi Pembelajaran. Di sini kamu bisa belajar per-modul atau langsung uji kemampuan akhir di menu Simulasi UAS.</p>
+            <button class="popup-btn" onclick="closePopup()">Masuk Dashboard</button>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <div class="container">
+        <header>
+            <h1>STUDY CENTER TPEN4406</h1>
+            <p>Ruang Akses Materi & Kuis Mandiri Berbasis Digital Modern</p>
+        </header>
+
+        <!-- SEKSI UTAMA: LATIHAN UAS -->
+        <div class="uas-section">
+            <div class="uas-card">
+                <div class="uas-info">
+                    <h2>Simulasi Latihan UAS</h2>
+                    <p>Uji kesiapan akhirmu dengan kumpulan soal gabungan (Modul 1 s/d 9) dengan standar kelulusan ujian UT.</p>
+                </div>
+                <a href="uas/latihan.html" class="btn-uas">Mulai Latihan UAS &rarr;</a>
+            </div>
+        </div>
+
+        <!-- GRID SEKSI MODUL -->
+        <div class="grid-modules">
+            
+            <!-- MODUL 1 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 1</h3>
+                    <p>Pengertian dan Karakteristik Inovasi Pembelajaran</p>
+                </div>
+                <a href="Modul-1/modul_1.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+            <!-- MODUL 2 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 2</h3>
+                    <p>Perubahan Paradigma Pendidikan dan Pengembangan Kompetensi Peserta Didik</p>
+                </div>
+                <a href="Modul-2/materi.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+            <!-- MODUL 3 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 3</h3>
+                    <p>Peranan Inovasi Pembelajaran Berbasis Teknologi Informasi dan Komunikasi (TIK)</p>
+                </div>
+                <a href="Modul-3/materi.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+            <!-- MODUL 4 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 4</h3>
+                    <p>Kesiapan Pemanfaatan Teknologi Informasi dan Komunikasi (E-readiness) untuk Inovasi Pembelajaran</p>
+                </div>
+                <a href="Modul-4/materi.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+            <!-- MODUL 5 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 5</h3>
+                    <p>'Gerakan' Pendidikan Terbuka (Open Education Movement)</p>
+                </div>
+                <a href="Modul-5/materi.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+            <!-- MODUL 6 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 6</h3>
+                    <p>Sistem Pembelajaran Daring</p>
+                </div>
+                <a href="Modul-6/soal1.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+            <!-- MODUL 7 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 7</h3>
+                    <p>Sistem Asesmen Hasil Belajar Daring</p>
+                </div>
+                <a href="Modul-7/materi.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+            <!-- MODUL 8 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 8</h3>
+                    <p>Difusi Inovasi Pendidikan Dasar</p>
+                </div>
+                <a href="Modul-8/materi.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+            <!-- MODUL 9 -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Modul 9</h3>
+                    <p>Pengembangan Rancangan Pembelajaran Berbasis Teknologi Informasi dan Komunikasi</p>
+                </div>
+                <a href="Modul-9/materi.html" class="btn-akses">Akses Modul</a>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Portal TPEN4406. Dikembangkan untuk efisiensi belajar mahasiswa.</p>
+        </footer>
+    </div>
+
+    <script>
+        function closePopup() {
+            const popup = document.getElementById('welcomePopup');
+            popup.style.opacity = '0';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 500);
+        }
+    </script>
+</body>
+</html>
