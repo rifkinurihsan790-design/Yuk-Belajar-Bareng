@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Akhir Semester - TPEN4406</title>
+    <style>
+        /* CSS DASAR & RESPONSIF (SIMPEL, ELEGAN, MODERN) */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* HEADER & TIMER STICKY */
+        header {
+            border-bottom: 2px solid #eef2f5;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .title-area h1 {
+            font-size: 20px;
+            color: #2c3e50;
+        }
+
+        .title-area p {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        #timer-box {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* AREA SOAL */
+        .question-card {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eef2f5;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .options-list {
+            list-style: none;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-item:hover {
+            background: #edf2f7;
+        }
+
+        .option-item input {
+            margin-top: 5px;
+            margin-right: 12px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .option-text {
+            font-size: 15px;
+            color: #4a5568;
+        }
+
+        /* TOMBOL SELESAI */
+        .submit-area {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-submit {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #27ae60;
+        }
+
+        /* POPUP HASIL / SKOR */
+        #result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #3498db;
+            margin: 20px 0;
+        }
+
+        /* GRUP TOMBOL BARU PADA MODAL */
+        .modal-btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .btn-retry {
+            background-color: #f39c12;
+            color: white;
+        }
+        .btn-retry:hover {
+            background-color: #d35400;
+        }
+
+        .btn-home {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-home:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-review {
+            background-color: #7f8c8d;
+            color: white;
+        }
+        .btn-review:hover {
+            background-color: #718093;
+        }
+
+        /* PENYESUAIAN LAYAR HP (RESPONSIF) */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            #timer-box {
+                align-self: flex-end;
+            }
+            .question-text {
+                font-size: 15px;
+            }
+            .option-text {
+                font-size: 14px;
+            }
+            .modal-btn-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            .modal-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="title-area">
+            <h1>Ujian Akhir Semester (UAS) Mandiri</h1>
+            <p>Mata Kuliah: TPEN4406 - Inovasi Pembelajaran (50 Soal)</p>
+        </div>
+        <div id="timer-box">Sisa Waktu: 120:00</div>
+    </header>
+
+    <form id="quiz-form">
+        <div id="quiz-container">
+            </div>
+
+        <div class="submit-area">
+            <button type="button" class="btn-submit" onclick="hitungSkor()">Selesai & Kirim Jawaban</button>
+        </div>
+    </form>
+</div>
+
+<div id="result-modal">
+    <div class="modal-content">
+        <h2>Hasil Ujian Anda</h2>
+        <p>Terima kasih telah menyelesaikan ujian ini.</p>
+        <div class="score-display" id="final-score">0</div>
+        <p id="score-details"></p>
+        
+        <div class="modal-btn-group">
+            <button type="button" class="modal-btn btn-retry" onclick="ulangUjian()">Ulang Tes</button>
+            <a href="https://rifkinurihsan790-design.github.io/Yuk-Belajar-Bareng/inovasi/uas/latihan.html" class="modal-btn btn-home">Halaman Utama</a>
+            <button type="button" class="modal-btn btn-review" onclick="tutupModal()">Lihat Jawaban</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DATABASE 50 SOAL DAN KUNCI JAWABAN
+    const daftarSoal = [
+        {
+            no: 1,
+            q: "Dalam studi inovasi pembelajaran, penting untuk membedakan antara discovery, invention, dan innovation. Ketika seorang dosen secara tidak sengaja menemukan metode pengelompokan mahasiswa baru yang ternyata efektif, lalu metode tersebut sengaja dikembangkan dan diterapkan secara formal di kampus untuk memecahkan masalah kejenuhan kelas, proses perubahan ini telah beralih dari...",
+            a: "Invention menjadi Discovery", b: "Discovery menjadi Innovation", c: "Innovation menjadi Invention", d: "Discovery menjadi Invention", e: "Invention menjadi Modernization",
+            ans: "b"
+        },
+        {
+            no: 2,
+            q: "Sebuah media pembelajaran berbasis Virtual Reality (VR) sangat canggih dan mampu meningkatkan pemahaman abstrak mahasiswa hingga 100%. Namun, inovasi ini ditolak oleh mayoritas dosen karena memerlukan perangkat keras mahal dan prosedur aktivasi akun yang sangat rumit. Berdasarkan teori Rogers, inovasi ini gagal diadopsi karena mengabaikan karakteristik...",
+            a: "Relative Advantage (Keuntungan Relatif)", b: "Compatibility (Keselarasan)", c: "Complexity (Kerumitan)", d: "Triability (Kemungkinan Dicoba)", e: "Observability (Kemungkinan Diamati)",
+            ans: "c"
+        },
+        {
+            no: 3,
+            q: "Ketika Universitas Terbuka meluncurkan modul digital interaktif baru, manajemen memastikan bahwa modul tersebut memiliki format yang selaras dengan nilai-nilai kemandirian belajar mahasiswa, serta tidak bertentangan dengan kebiasaan membaca digital yang sudah berjalan sebelumnya. Atribut inovasi yang sedang dipenuhi ini disebut...",
+            a: "Kompatibilitas", b: "Kompleksitas", c: "Keunggulan Relatif", d: "Akseptabilitas", e: "Orisinalitas",
+            ans: "a"
+        },
+        {
+            no: 4,
+            q: "Salah satu hambatan utama dalam difusi inovasi pendidikan di tingkat perguruan tinggi adalah adanya rejection (penolakan) yang disebabkan oleh faktor 'Masyarakat atau sistem sosial mempertahankan nilai-nilai tradisional secara kaku dan menganggap metode baru berpotensi merusak tatanan akademik'. Hambatan psikologis-sosial seperti ini digolongkan sebagai...",
+            a: "Hambatan Ekonomis", b: "Hambatan Teknis", c: "Hambatan Kultural (Budaya)", d: "Hambatan Prosedural", e: "Hambatan Politis",
+            ans: "c"
+        },
+        {
+            no: 5,
+            q: "Inovasi dalam pembelajaran modern bergeser dari paradigma Teacher-Centered Learning (TCL) menuju Student-Centered Learning (SCL). Tujuan paling mendasar dari inovasi perubahan paradigma ini di level mahasiswa adalah...",
+            a: "Mengurangi beban jam mengajar dosen di ruang kelas tatap muka.", b: "Menyerahkan seluruh tanggung jawab kelulusan akademik kepada sistem komputer.", c: "Mendorong kemampuan regulasi diri (self-regulated learning) dan berpikir kritis mahasiswa.", d: "Menekan biaya operasional pengadaan bahan ajar cetak di tingkat universitas.", e: "Memastikan seluruh mahasiswa mendapatkan nilai indeks prestasi kumulatif yang seragam.",
+            ans: "c"
+        },
+        {
+            no: 6,
+            q: "Jika sebuah program studi melakukan pembaruan kurikulum secara berkala, terencana, menggunakan riset empiris terdahulu, serta melibatkan agen perubahan (change agent) eksternal untuk memperbaiki mutu lulusan, maka tipologi perubahan yang terjadi disebut sebagai...",
+            a: "Perubahan Kebetulan (Accidental Change)", b: "Perubahan Terencana (Planned Change)", c: "Perubahan Paksaan (Coercive Change)", d: "Perubahan Alami (Spontaneous Change)", e: "Perubahan Instan (Revolutionary Change)",
+            ans: "b"
+        },
+        {
+            no: 7,
+            q: "Perubahan paradigma pendidikan dari Instructional Paradigm (Paradigma Pengajaran) menuju Learning Paradigm (Paradigma Pembelajaran) mengubah peran dosen secara mendasar. Di dalam paradigma baru ini, posisi dosen yang paling tepat adalah sebagai...",
+            a: "Satu-satunya sumber kebenaran ilmiah di dalam ruang kelas.", b: "Perancang lingkungan belajar (designer of learning environments) dan fasilitator.", c: "Pengawas disiplin yang kaku selama proses ujian berlangsung.", d: "Penyampai materi tunggal yang wajib dihafal oleh mahasiswa.", e: "Penentu mutlak kelulusan tanpa memerlukan indikator kinerja objektif.",
+            ans: "b"
+        },
+        {
+            no: 8,
+            q: "Kurikulum inovatif abad ke-21 menekankan pada Pembelajaran Berbasis Kompetensi (Competency-Based Learning). Salah satu ciri utama yang membedakan pendekatan ini dengan pendekatan berbasis konten tradisional adalah...",
+            a: "Waktu belajar diseragamkan dan dibuat sangat kaku untuk semua mahasiswa.", b: "Penilaian hanya dilakukan satu kali pada akhir semester menggunakan ujian tulis.", c: "Mahasiswa baru dapat melangkah ke materi berikutnya setelah menunjukkan penguasaan (mastery) pada kompetensi sebelumnya.", d: "Mengabaikan aspek keterampilan praktis dan berfokus penuh pada hafalan teori.", e: "Menghilangkan peran tugas mandiri agar mahasiswa tidak merasa terbebani.",
+            ans: "c"
+        },
+        {
+            no: 9,
+            q: "Menurut konsep pengembangan kompetensi abad 21, kompetensi tidak hanya terdiri dari akumulasi pengetahuan (knowledge) saja, melainkan merupakan perpaduan utuh yang mensinergikan antara...",
+            a: "Teori baku, kurikulum nasional, dan kebijakan kampus.", b: "Pengetahuan, keterampilan (skills), serta sikap/nilai (attitude/values).", c: "Fasilitas digital, kuota internet, dan modul cetak.", d: "Nilai IPK tinggi, ijazah resmi, dan jejaring alumni.", e: "Regulasi pemerintah, anggaran pendidikan, dan sarana prasarana.",
+            ans: "b"
+        },
+        {
+            no: 10,
+            q: "Dalam implementasi paradigma Student-Centered Learning (SCL) pada Modul 2, mahasiswa dituntut untuk memiliki kemampuan *Self-Regulated Learning*. Manakah contoh tindakan mahasiswa yang mencerminkan kemampuan tersebut?",
+            a: "Menunggu instruksi dan rangkuman materi materi sepenuhnya dari tutor menjelang ujian.", b: "Mengandalkan kunci jawaban miliki teman tanpa mencoba mendalami esensi soal.", c: "Mampu menetapkan tujuan belajar pribadi, memilih strategi yang tepat, dan mengevaluasi kemajuan belajarnya secara mandiri.", d: "Meminta universitas menurunkan standar kelulusan agar semua mata kuliah mudah dilewati.", e: "Hanya belajar ketika ada jadwal kelas sinkronus (tatap muka maya) berlangsung.",
+            ans: "c"
+        },
+        {
+            no: 11,
+            q: "Dunia kerja modern membutuhkan lulusan yang memiliki kemampuan literasi baru. Selain literasi data dan literasi teknologi, inovasi pembelajaran harus mampu membekali mahasiswa dengan Human Literacy (Literasi Manusia). Fokus utama dari pengembangan literasi manusia ini adalah...",
+            a: "Kemampuan coding dan pemrograman komputer tingkat lanjut.", b: "Kemampuan membaca data statistik berukuran raksasa (big data).", c: "Kemampuan berkomunikasi, berkolaborasi, berempati, dan memahami budaya orang lain.", d: "Kemampuan menghafal isi seluruh isi buku teks tanpa kesalahan.", e: "Kemampuan mengoperasikan mesin-mesin industri otomatis.",
+            ans: "c"
+        },
+        {
+            no: 12,
+            q: "Ketika paradigma pendidikan berubah fokus ke pengembangan kompetensi peserta didik, sistem penilaian atau asesmen pun harus ikut berinovasi. Bentuk penilaian yang paling valid untuk mengukur kompetensi nyata mahasiswa adalah...",
+            a: "Ujian pilihan ganda yang hanya menguji aspek hafalan istilah jangka pendek.", b: "Asesmen autentik (authentic assessment) seperti penilaian kinerja, portofolio, dan pemecahan kasus nyata.", c: "Penilaian yang didasarkan pada tingkat kehadiran mahasiswa di kelas saja.", d: "Ujian dadakan tanpa pemberitahuan untuk menguji kepanikan mahasiswa.", e: "Penilaian subjektif berdasarkan kedekatan personal antara dosen dan mahasiswa.",
+            ans: "b"
+        },
+        {
+            no: 13,
+            q: "Dalam konteks inovasi pembelajaran, pemanfaatan Teknologi Informasi dan Komunikasi (TIK) bukan sekadar alat bantu (perangkat keras) elektronik di kelas, melainkan sebagai sebuah sistem yang berfungsi untuk...",
+            a: "Menggantikan kehadiran fisik dosen secara permanen di seluruh jenjang pendidikan.", b: "Mentransformasi proses kognitif, memperluas akses informasi, dan mendemokratisasi pembelajaran.", c: "Memaksa siswa membeli gawai dengan spesifikasi tertinggi demi kelulusan akademik.", d: "Mengotomatisasi penilaian subjektif tanpa indikator capaian yang jelas.", e: "Mengurangi keterlibatan interaksi sosial antarpeserta didik secara mutlak.",
+            ans: "b"
+        },
+        {
+            no: 14,
+            q: "Sebuah inovasi pembelajaran mengombinasikan keunggulan interaksi tatap muka langsung di dalam kelas dengan fleksibilitas pembelajaran mandiri berbasis web secara daring (online). Model pengorganisasian pembelajaran berbasis TIK ini dikenal sebagai...",
+            a: "Synchronous E-Learning", b: "Asynchronous E-Learning", c: "Blended/Hybrid Learning", d: "Distance Learning", e: "Virtual Reality Classroom",
+            ans: "c"
+        },
+        {
+            no: 15,
+            q: "Mahasiswa Universitas Terbuka memanfaatkan fasilitas diskusi pada Learning Management System (LMS) secara mandiri, di mana mereka dapat membaca materi, mengunduh tugas, dan merespons argumen mahasiswa lain tanpa harus berada di waktu yang sama dengan tutornya. Interaksi pembelajaran berbasis TIK seperti ini dikategorikan sebagai...",
+            a: "Pembelajaran Sinkronus (Synchronous)", b: "Pembelajaran Asinkronus (Asynchronous)", c: "Pembelajaran Tradisional Linear", d: "Pembelajaran Koersif Terbuka", e: "Pembelajaran Mekanis",
+            ans: "b"
+        },
+        {
+            no: 16,
+            q: "Perkembangan TIK mendorong lahirnya gerakan Open Educational Resources (OER) atau Bahan Ajar Terbuka dalam inovasi pembelajaran digital. Esensi utama dari keberadaan OER dalam modul 3 ini adalah...",
+            a: "Bahan ajar digital yang dijual secara komersial dengan lisensi hak cipta penuh (All Rights Reserved).", b: "Materi pembelajaran digital yang dapat diakses, digunakan kembali, dimodifikasi, dan disebarluaskan secara gratis dan legal oleh publik.", c: "Aplikasi ujian daring yang dikunci secara ketat agar tidak bisa diakses dari luar kampus.", d: "Buku teks cetak wajib yang hanya didistribusikan melalui perpustakaan fisik universitas.", e: "Perangkat lunak berbayar yang digunakan untuk mendeteksi kecurangan mahasiswa saat ujian online.",
+            ans: "b"
+        },
+        {
+            no: 17,
+            q: "Saat mendesain multimedia pembelajaran interaktif inovatif, pengembang harus memperhatikan prinsip-prinsip desain instruksional agar tidak membebani kapasitas memori kerja (working memory) peserta didik. Teori yang melandasi pentingnya pembatasan beban informasi visual dan auditori ini disebut...",
+            a: "Behavioral Learning Theory", b: "Cognitive Load Theory", c: "Social Constructivism Theory", d: "Diffusion of Innovations Theory", e: "Humanistic Education Theory",
+            ans: "b"
+        },
+        {
+            no: 18,
+            q: "Meskipun infrastruktur internet dan komputer sudah tersedia lengkap di lingkungan kampus, sebuah inovasi pembelajaran berbasis TIK sering kali mengalami kegagalan adopsi. Hambatan internal tingkat pertama (first-order barrier) yang paling sering dikaitkan dengan faktor manusia (pendidik) adalah...",
+            a: "Kurangnya dana anggaran untuk membeli lisensi aplikasi tahunan.", b: "Kecepatan bandwidth internet yang tidak stabil di wilayah pedalaman.", c: "Sikap (attitude), keyakinan (belief), serta resistensi psikologis dosen terhadap perubahan teknologi.", d: "Ketiadaan dokumen regulasi tertulis dari Kementerian Pendidikan.", e: "Ketandapampuan mahasiswa dalam membeli kuota data internet bulanan.",
+            ans: "c"
+        },
+        {
+            no: 19,
+            q: "Dalam model pembelajaran inovatif Problem-Based Learning (PBL), proses pembelajaran selalu diawali dengan penyajian masalah. Agar masalah tersebut mampu memicu kemampuan berpikir tingkat tinggi dan penyelidikan autentik mahasiswa, maka karakteristik masalah yang disajikan harus bersifat...",
+            a: "Terstruktur dengan satu jawaban pasti yang ada di dalam buku teks.", b: "Abstrak, rumit, dan tidak memiliki kaitan dengan dunia nyata mahasiswa.", c: "Terbuka (ill-structured), kontekstual, dan bermakna (meaningful).", d: "Sederhana agar dapat diselesaikan dalam waktu kurang dari lima menit.", e: "Khayalan/fiktif yang bertujuan untuk menguji imajinasi teoritis.",
+            ans: "c"
+        },
+        {
+            no: 20,
+            q: "Model Project-Based Learning (PjBL) menuntut mahasiswa menghasilkan sebuah produk nyata di akhir proses. Pada tahap awal pelaksanaan sintaks PjBL, peran utama yang harus dilakukan oleh seorang dosen/tutor sebagai fasilitator adalah...",
+            a: "Langsung memberikan nilai akhir berdasarkan rancangan kasar mahasiswa.", b: "Menetapkan pertanyaan mendasar (essential question) yang menantang dan memandu mahasiswa merencanakan proyek.", c: "Mengambil alih seluruh pengerjaan proyek agar selesai tepat waktu sesuai target.", d: "Melarang mahasiswa menggunakan sumber referensi digital dari luar kampus.", e: "Membiarkan mahasiswa bekerja tanpa batasan waktu dan tanpa jadwal monitoring.",
+            ans: "b"
+        },
+        {
+            no: 21,
+            q: "Modul 4 menegaskan bahwa tidak semua kerja kelompok dapat disebut sebagai pembelajaran koperatif (cooperative learning). Inovasi pembelajaran koperatif dicirikan oleh adanya elemen pengikat yang sangat khas, yaitu...",
+            a: "Pembagian tugas secara acak tanpa adanya evaluasi hasil kerja.", b: "Ketergantungan positif (positive interdependence) and akuntabilitas individu.", c: "Persaingan ketat antaranggota di dalam satu kelompok untuk mendapat nilai tertinggi.", d: "Penentuan ketua kelompok berdasarkan indeks prestasi kumulatif terbesar.", e: "Pembebasan tugas mandiri bagi anggota yang tidak aktif.",
+            ans: "b"
+        },
+        {
+            no: 22,
+            q: "Seorang tutor menerapkan inovasi koperatif tipe Jigsaw di kelasnya. Dalam penerapannya, mahasiswa akan dibagi ke dalam 'Kelompok Asal' kemudian berpindah membentuk 'Kelompok Ahli'. Fungsi utama dari dibentuknya Kelompok Ahli tersebut adalah...",
+            a: "Menguji kemampuan mahasiswa dalam mendebat argumen kelompok lawan secara agresif.", b: "Mempelajari satu sub-materi spesifik secara mendalam bersama anggota lain yang mendapat topik sama, untuk kemudian diajarkan kembali ke kelompok asal.", c: "Memilih anggota mana yang paling berhak mendapatkan nilai kelulusan tertinggi.", d: "Menyusun laporan akhir bab tanpa perlu berinteraksi lagi dengan kelompok asal.", e: "Menggantikan peran tutor dalam memberikan ceramah materi di depan kelas secara penuh.",
+            ans: "b"
+        },
+        {
+            no: 23,
+            q: "Pembelajaran kolaboratif (collaborative learning) didasarkan pada filosofi sosiokultural yang menyatakan bahwa pengetahuan dikonstruksi secara bersama-sama oleh pembelajar. Tokoh pencetus teori belajar yang melandasi pentingnya interaksi sosial dan Zone of Proximal Development (ZPD) dalam pembelajaran kolaboratif ini adalah...",
+            a: "B.F. Skinner", b: "Lev Vygotsky", c: "Jean Piaget", d: "John Watson", e: "Albert Bandura",
+            ans: "b"
+        },
+        {
+            no: 24,
+            q: "Strategi Flipped Classroom (Kelas Terbalik) merupakan salah satu bentuk inovasi strategi pembelajaran modern. Makna dari kata 'terbalik' dalam implementasi strategi ini merujuk pada kondisi di mana...",
+            a: "Ujian akhir semester dilaksanakan di awal pertemuan, sedangkan materi diberikan di akhir.", b: "Mahasiswa mempelajari materi secara mandiri di rumah (melalui video/modul) sebelum kelas dimulai, sedangkan waktu tatap muka di kelas digunakan untuk diskusi interaktif dan pemecahan masalah.", c: "Dosen mendengarkan presentasi mahasiswa sepanjang semester tanpa memberikan masukan.", d: "Proses belajar di kelas diganti sepenuhnya menjadi kegiatan olahraga dan praktik lapangan.", e: "Mahasiswa diwajibkan mengajar mahasiswa dari program studi lain secara bergantian.",
+            ans: "b"
+        },
+        {
+            no: 25,
+            q: "Gerakan Pendidikan Terbuka (Open Education Movement) lahir sebagai respons inovatif terhadap keterbatasan sistem pendidikan konvensional. Filosofi paling mendasar yang melandasi gerakan ini adalah...",
+            a: "Mengganti sistem penilaian dosen dengan penilaian otomatis oleh kecerdasan buatan.", b: "Menghilangkan sekat-sekat hambatan (geografis, ekonomi, sosial, dan legal) agar pengetahuan dapat diakses secara bebas oleh siapa saja.", c: "Memaksa seluruh institusi pendidikan formal untuk menutup kelas tatap muka secara permanen.", d: "Mengurangi standar kualitas kelulusan demi mengejar kuantitas lulusan bergelar akademik.", e: "Menyediakan platform pembelajaran digital yang hanya bisa diakses oleh kalangan elit tertentu.",
+            ans: "b"
+        },
+        {
+            no: 26,
+            q: "Di dalam Modul 5, Open Educational Resources (OER) atau Sumber Daya Pendidikan Terbuka diidentifikasi sebagai instrumen penting. Perbedaan yuridis utama antara OER dengan materi digital biasa yang memiliki hak cipta penuh (All Rights Reserved) adalah...",
+            a: "Format dan ukuran file OER jauh lebih kecil sehingga mudah diunduh.", b: "OER dilepaskan ke ranah publik menggunakan lisensi terbuka yang memberi izin legal kepada pengguna untuk memakai, mengubah, dan menyebarkannya kembali.", c: "Materi OER selalu ditulis oleh lembaga internasional sekelas UNESCO saja.", d: "OER tidak memerlukan proses peninjauan sejawat (peer-review) dalam pembuatannya.", e: "Pengguna OER wajib membayar royalti tahunan setelah penggunaan pertama.",
+            ans: "b"
+        },
+        {
+            no: 27,
+            q: "Menurut David Wiley, sebuah bahan ajar digital dapat dikatakan sebagai OER sejati jika memenuhi hak atau izin '5R'. Ketika seorang mahasiswa mengunduh sebuah modul OER, lalu menggabungkan bab dari modul tersebut dengan video klip dan infografis dari sumber terbuka lain untuk menciptakan materi kuliah baru, aktivitas ini masuk dalam dimensi...",
+            a: "Retain (Menyimpan)", b: "Reuse (Menggunakan kembali)", c: "Revise (Merevisi)", d: "Remix (Memadukan)", e: "Redistribute (Menyebarluaskan)",
+            ans: "d"
+        },
+        {
+            no: 28,
+            q: "Instrumen legal yang paling populer digunakan dalam ekosistem pendidikan terbuka untuk menjembatani hak cipta antara pencipta dan pengguna adalah lisensi Creative Commons (CC). Jika sebuah modul berlisensi CC BY-NC, maka ketentuan yang harus dipatuhi oleh mahasiswa adalah...",
+            a: "Boleh menyebarkan materi secara bebas untuk tujuan komersial/bisnis asal membayar pajak.", b: "Wajib mencantumkan atribusi (nama pencipta asli) dan dilarang menggunakannya untuk tujuan komersial.", c: "Tidak boleh mengubah atau merevisi isi modul sedikit pun (No Derivatives).", d: "Harus membagikan ulang materi turunan tersebut dengan lisensi yang jauh lebih tertutup.", e: "Hanya boleh membaca modul di situs aslinya tanpa izin mengunduh ke komputer pribadi.",
+            ans: "b"
+        },
+        {
+            no: 29,
+            q: "Massive Open Online Courses (MOOCs) merupakan salah satu produk inovasi terbesar dari gerakan pendidikan terbuka. Karakteristik 'Massive' pada MOOCs mengandung arti bahwa platform pembelajaran tersebut...",
+            a: "Memerlukan kapasitas penyimpanan server yang sangat besar di tingkat universitas.", b: "Memiliki materi yang sangat padat dan sulit untuk diselesaikan oleh mahasiswa biasa.", c: "Mampu menampung jumlah peserta belajar dalam skala besar tanpa batasan kuota kelas secara tradisional.", d: "Dijual dengan harga investasi yang sangat besar bagi instansi yang mengadopsinya.", e: "Menggunakan metode ujian lisan massal yang dilakukan serentak di satu lokasi fisik.",
+            ans: "c"
+        },
+        {
+            no: 30,
+            q: "Meskipun ekosistem Pendidikan Terbuka menyediakan materi belajar gratis berkualitas tinggi yang melimpah, data menunjukkan angka penyelesaian (completion rate) mahasiswa pada kursus terbuka cenderung rendah. Hambatan utama yang sering diidentifikasi pada diri pembelajar (mahasiswa) dalam konteks ini adalah...",
+            a: "Ketidaktersediaan perangkat komputer di pasaran global.", b: "Lemahnya kemampuan regulasi diri (self-regulated learning) dan motivasi internal mahasiswa untuk belajar secara mandiri.", c: "Ketatnya sanksi hukum internasional bagi mahasiswa yang salah mengunduh materi.", d: "Penolakan dari pihak kampus untuk mengakui keabsahan materi digital.", e: "Mahalnya biaya pendaftaran awal untuk membuka akun di platform terbuka.",
+            ans: "b"
+        },
+        {
+            no: 31,
+            q: "Berdasarkan materi Modul 6, pembelajaran daring (online learning) tidak sekadar didefinisikan sebagai pemindahan materi cetak ke dalam layar komputer. Esensi paling mendasar dari sebuah sistem pembelajaran daring yang efektif dan inovatif terletak pada...",
+            a: "Kecepatan server pusat dalam mengunggah video berdurasi panjang.", b: "Penyediaan interaksi yang kaya dan terstruktur antara mahasiswa, pengajar, materi, serta pemanfaatan konektivitas internet secara optimal.", c: "Penggunaan aplikasi pihak ketiga yang mewajibkan mahasiswa membayar biaya lisensi tambahan.", d: "Otomatisasi kelulusan nilai mahasiswa tanpa melalui proses evaluasi tugas akademik.", e: "Penyeragaman seluruh jadwal belajar mahasiswa agar sama dengan sistem kelas konvensional.",
+            ans: "b"
+        },
+        {
+            no: 32,
+            q: "Dalam mengorganisasikan sistem pembelajaran daring yang utuh, diperlukan platform perangkat lunak yang berfungsi untuk mengelola administrasi, mendokumentasikan, melacak, melaporkan, dan menyampaikan materi perkuliahan serta interaksi diskusi secara terintegrasi. Platform ini dikenal sebagai...",
+            a: "Search Engine Optimization (SEO)", b: "Learning Management System (LMS)", c: "Content Delivery Network (CDN)", d: "Virtual Reality Interface (VRI)", e: "Video Conference System (VCS)",
+            ans: "b"
+        },
+        {
+            no: 33,
+            q: "Menurut teori interaksi dalam pembelajaran jarak jauh dan daring yang dibahas dalam modul ini, terdapat tiga jenis interaksi utama. Ketika seorang mahasiswa UT aktif membaca modul digital, menganalisis infografis, dan mengerjakan latihan mandiri di dalam sistem tanpa melibatkan orang lain saat itu, jenis interaksi yang sedang dominan terjadi adalah...",
+            a: "Interaksi antara Mahasiswa dengan Pengajar (Learner-to-Instructor Interaction)", b: "Interaksi antara Mahasiswa dengan Mahasiswa (Learner-to-Learner Interaction)", c: "Interaksi antara Mahasiswa dengan Konten/Materi (Learner-to-Content Interaction)", d: "Interaksi antara Pengajar dengan Institusi (Instructor-to-Institution Interaction)", e: "Interaksi antara Mahasiswa dengan Antarmuka (Learner-to-Interface Interaction)",
+            ans: "c"
+        },
+        {
+            no: 34,
+            q: "Dalam lingkungan pembelajaran daring yang berbasis Student-Centered Learning, peran tutor di dalam forum diskusi asinkronus mengalami pergeseran. Tindakan tutor yang paling tepat dalam memfasilitasi diskusi daring agar mahasiswa mencapai tingkat berpikir kritis adalah...",
+            a: "Langsung memberikan jawaban benar di awal forum agar diskusi cepat selesai.", b: "Bertindak sebagai moderator dan provokator intelektual yang memberikan pertanyaan pelacak (probing) guna memicu kedalaman argumen mahasiswa.", c: "Membiarkan forum kosong tanpa memberikan umpan balik atau penilaian sama sekali sepanjang semester.", d: "Menghapus pendapat mahasiswa yang tidak sama dengan sudut pandang pribadi tutor.", e: "Mewajibkan mahasiswa menghafal seluruh teks materi di dalam modul untuk ditulis ulang di kolom komentar.",
+            ans: "b"
+        },
+        {
+            no: 35,
+            q: "Salah satu faktor penentu keberhasilan mahasiswa dalam sistem pembelajaran daring yang menuntut kemandirian tinggi adalah Online Learning Readiness. Aspek psikologis paling krusial dari diri mahasiswa yang membedakan kesuksesan belajar daring dengan kelas tatap muka tradisional adalah...",
+            a: "Kemampuan finansial untuk membeli perangkat gawai model terbaru setiap tahun.", b: "Tingkat keterampilan teknis dalam membongkar komponen keras komputer.", c: "Kemampuan regulasi diri (self-regulated learning), motivasi internal, dan manajemen waktu secara mandiri.", d: "Kedekatan hubungan emosional secara personal dengan staf administrasi kampus.", e: "Ketersediaan waktu luang untuk terus berada di depan layar komputer selama 24 jam penuh.",
+            ans: "c"
+        },
+        {
+            no: 36,
+            q: "Salah satu tantangan terbesar yang dihadapi dalam penerapan sistem asesmen hasil belajar daring, terutama pada jenis ujian tanpa pengawasan langsung (unproctored test), adalah isu validitas akibat rendahnya kendali terhadap integritas akademik. Masalah utama yang sering muncul dari kondisi ini adalah...",
+            a: "Ketidakstabilan koneksi internet pada server penyedia ujian daring.", b: "Tingginya risiko kecurangan, perjokan, serta plagiarisme oleh peserta ujian.", c: "Terbatasnya variasi bentuk soal yang bisa dimasukkan ke dalam sistem database.", d: "Lamanya waktu yang dibutuhkan komputer untuk mengoreksi jawaban mahasiswa.", e: "Ketidakmampuan mahasiswa dalam memahami petunjuk pengerjaan soal di layar.",
+            ans: "b"
+        },
+        {
+            no: 37,
+            q: "Untuk mengatasi keterbatasan tes tertulis digital tradisional, Modul 7 menyarankan penggunaan asesmen alternatif berbasis web, salah satunya adalah e-portfolio. Esensi utama dari penerapan e-portfolio dalam asesmen daring mahasiswa adalah...",
+            a: "Kumpulan skor hasil ujian pilihan ganda mahasiswa yang diurutkan otomatis oleh sistem dari nilai tertinggi.", b: "Dokumentasi digital yang merekam perkembangan, refleksi, dan hasil karya nyata mahasiswa secara sistematis dalam kurun waktu tertentu.", c: "Aplikasi khusus yang digunakan dosen untuk melacak jam kehadiran mahasiswa di forum diskusi.", d: "Format file modul digital yang wajib diunduh mahasiswa sebelum pelaksanaan ujian akhir semester.", e: "Alat otomatis yang mendeteksi tingkat kemiripan kalimat tugas mahasiswa dengan artikel di internet.",
+            ans: "b"
+        },
+        {
+            no: 38,
+            q: "Dalam inovasi teknologi pendidikan, beberapa universitas jarak jauh menggunakan perangkat lunak pengawasan digital terintegrasi yang memanfaatkan kamera web (webcam) dan AI untuk merekam wajah, mendeteksi gerakan mencurigakan, serta mengunci peramban (browser) mahasiswa selama ujian daring berlangsung. Sistem ini dikenal sebagai...",
+            a: "Learning Analytics System", b: "Automated Grading Tools", c: "Online Proctoring System", d: "Plagiarism Detection Software", e: "Content Management System",
+            ans: "c"
+        },
+        {
+            no: 39,
+            q: "Ketika dosen memberikan tugas kinerja berupa analisis video kasus atau pembuatan proyek digital, objektivitas penilaian daring harus tetap terjaga meskipun tidak bertatap muka langsung. Instrumen penunjang yang paling krusial untuk memastikan keadilan dan transparansi penilaian performa tersebut adalah...",
+            a: "Kunci jawaban baku yang berisi satu kata kunci mutlak.", b: "Rubrik penilaian yang terperinci yang memuat kriteria dan tingkatan kualitas capaian.", c: "Pemberian nilai yang diseragamkan untuk semua anggota kelas daring.", d: "Penggunaan algoritma acak (random) untuk menentukan kelulusan mahasiswa.", e: "Pembatasan jumlah halaman tugas agar tidak terlalu panjang dibaca oleh dosen.",
+            ans: "b"
+        },
+        {
+            no: 40,
+            q: "Sistem asesmen daring yang dirancang dengan baik harus mampu memberikan umpan balik (feedback) secara instan. Manfaat utama dari pemberian umpan balik otomatis sesaat setelah mahasiswa menyelesaikan kuis formatif mandiri di LMS adalah...",
+            a: "Mempercepat proses penutupan semester oleh bagian administrasi akademik.", b: "Membantu mahasiswa mengidentifikasi kesalahan konsep berfikir secara langsung guna melakukan perbaikan mandiri (remedial).", c: "Menghilangkan fungsi dan peran dosen dalam merancang instrumen evaluasi berikutnya.", d: "Memastikan mahasiswa tidak perlu lagi membaca modul cetak pada materi selanjutnya.", e: "Mengurangi tingkat kesulitan soal pada ujian akhir semester yang sesungguhnya.",
+            ans: "b"
+        },
+        {
+            no: 41,
+            q: "Dalam proses difusi dan pengelolaan inovasi di lembaga pendidikan, kehadiran seorang Agen Perubahan (Change Agent) sangat krusial. Peran utama seorang agen perubahan di tingkat program studi saat mengintroduksi teknologi pembelajaran baru adalah...",
+            a: "Memaksa seluruh staf pengajar mengadopsi teknologi baru dalam waktu satu hari tanpa pelatihan.", b: "Menilai, memfasilitasi hubungan, mendiagnosis masalah, dan menumbuhkan kebutuhan akan perubahan pada diri pengadopsi.", c: "Mengambil alih tugas administratif dekorasi ruang kelas fisik kampus.", d: "Membeli lisensi perangkat lunak mahal tanpa melakukan analisis kebutuhan dosen.", e: "Menghukum mahasiswa atau dosen yang terlambat menguasai sistem digital baru.",
+            ans: "b"
+        },
+        {
+            no: 42,
+            q: "Berdasarkan tingkat kecepatan mengadopsi inovasi, Everett M. Rogers membagi pengadopsi menjadi 5 kelompok. Kelompok dosen yang memiliki sifat sangat lokal, sangat berhati-hati, cenderung curiga terhadap inovasi baru, dan biasanya baru mau menggunakan teknologi daring setelah metode konvensional benar-benar ditiadakan oleh kampus dikategorikan sebagai...",
+            a: "Innovators (Inovator)", b: "Early Adopters (Pengadopsi Awal)", c: "Early Majority (Mayoritas Awal)", d: "Late Majority (Mayoritas Akhir)", e: "Laggards (Kelompok Tertinggal)",
+            ans: "e"
+        },
+        {
+            no: 43,
+            q: "Ketika sebuah universitas menerapkan sistem administrasi ujian baru, muncul penolakan (resistance) dari sebagian besar staf akibat ketakutan akan kehilangan kenyamanan kerja cara lama. Langkah manajemen inovasi yang paling efektif untuk mereduksi resistensi psikologis tersebut adalah melalui strategi...",
+            a: "Coercion (Pemaksaan sepihak disertai ancaman pemecatan)", b: "Edukasi, komunikasi intensif, dan keterlibatan aktif pengadopsi dalam proses transisi", c: "Membiarkan konflik internal meluas hingga sistem lama rusak dengan sendirinya", d: "Mengabaikan keluhan staf dan mencari tenaga kerja pengganti dari luar instansi", e: "Menunda implementasi inovasi secara permanen tanpa batas waktu yang jelas",
+            ans: "b"
+        },
+        {
+            no: 44,
+            q: "Menurut Modul 8, proses keputusan inovasi merupakan sebuah proses yang dialami individu mulai dari tahu adanya inovasi sampai pada keputusan adopsi atau penolakan. Tahapan di mana seseorang atau lembaga mulai membentuk sikap menyukai atau tidak menyukai terhadap karakteristik inovasi tersebut dinamakan tahap...",
+            a: "Knowledge (Pengetahuan)", b: "Persuasion (Persuasi/Pembentukan Sikap)", c: "Decision (Keputusan)", d: "Implementation (Implementasi)", e: "Confirmation (Konfirmasi)",
+            ans: "b"
+        },
+        {
+            no: 45,
+            q: "Faktor manajerial paling mutlak yang menentukan keberhasilan pelembagaan (institutionalization) suatu inovasi pembelajaran agar dapat bertahan lama dan menjadi bagian dari budaya akademik organisasi adalah...",
+            a: "Ketersediaan brosur cetak yang disebarkan di sekitar gerbang kampus.", b: "Komitmen kepemimpinan kuat (strong leadership) yang didukung oleh regulasi kebijakan formal dan anggaran operasional berkelanjutan.", c: "Jumlah komputer rakitan generasi lama yang tersimpan di dalam gudang laboratorium.", d: "Keputusan mahasiswa untuk melakukan protes terhadap seluruh bentuk penugasan mandiri.", e: "Desain visual logo aplikasi yang sering berganti setiap semester.",
+            ans: "b"
+        },
+        {
+            no: 46,
+            q: "Dalam rancangan pembelajaran berbasis TIK, langkah awal yang paling krusial sebelum memilih media, software, atau menulis materi adalah melakukan analisis kebutuhan (need assessment) dan analisis instruksional. Tujuan utama dari tahapan ini adalah...",
+            a: "Menghitung total biaya pengadaan perangkat keras komputer di laboratorium.", b: "Menentukan kesenjangan antara kemampuan riil mahasiswa saat ini dengan kompetensi ideal yang harus dicapai.", c: "Memilih platform LMS yang memiliki desain antarmuka paling berwarna.", d: "Sering menyusun jadwal ujian akhir semester untuk seluruh program studi.", e: "Menulis kode pemrograman untuk sistem kecerdasan buatan kampus.",
+            ans: "b"
+        },
+        {
+            no: 47,
+            q: "Saat mendesain rancangan pembelajaran berbasis TIK, seorang pengembang kurikulum harus memilih media berdasarkan karakteristik pebelajar (learner characteristics). Jika sasaran utamanya adalah mahasiswa UT yang bekerja, memiliki keterbatasan waktu tatap muka, dan tersebar di berbagai wilayah geografis, maka kombinasi media yang paling tepat dirancang adalah...",
+            a: "Media cetak linier yang dikombinasikan dengan siaran radio wajib terjadwal kaku.", b: "Modul digital interaktif, rekaman video pembelajaran, dan forum diskusi asinkronus yang dapat diakses fleksibel.", c: "Praktikum laboratorium fisik intensif yang dilakukan setiap hari kerja di kampus pusat.", d: "Kuliah ceramah satu arah menggunakan papan tulis tradisional tanpa materi digital.", e: "Sistem ujian lisan massal yang mengharuskan kehadiran fisik serentak di satu kota.",
+            ans: "b"
+        },
+        {
+            no: 48,
+            q: "Sebuah rancangan pembelajaran berbasis TIK yang baik harus merumuskan Tujuan Instruksional Khusus (TIK) atau Indikator Capaian Pembelajaran secara operasional menggunakan formula ABCD (Audience, Behavior, Condition, Degree). Pada rumusan: 'Diberikan simulasi kasus kegagalan jaringan (C), mahasiswa (A) mampu mendeteksi letak kerusakan sistem (B) dengan akurasi 100% (D)', unsur Condition ditunjukkan oleh...",
+            a: "Mahasiswa", b: "Mampu mendeteksi letak kerusakan sistem", c: "Diberikan simulasi kasus kegagalan jaringan", d: "Dengan akurasi 100%", e: "Desain jaringan komputer",
+            ans: "c"
+        },
+        {
+            no: 49,
+            q: "Modul 9 menekankan pentingnya merancang strategi pembelajaran yang memadukan aktivitas mandiri dan kelompok. Ketika mendesain aktivitas interaksi pada LMS, langkah yang dirancang untuk memastikan terjadinya konstruksi pengetahuan secara kolaboratif adalah...",
+            a: "Mewajibkan mahasiswa mengunduh file materi secara mandiri tanpa ada ruang diskusi.", b: "Menyediakan forum diskusi berbasis masalah di mana mahasiswa wajib menganalisis kasus, merespons argumen sejawat, dan menyimpulkan solusi bersama.", c: "Mengirimkan nilai tugas akhir secara rahasia langsung ke email masing-masing mahasiswa.", d: "Meminta mahasiswa menghafalkan teks modul secara harfiah untuk ditulis saat ujian online.", e: "Menutup akses tanya jawab antara mahasiswa dengan tutor sepanjang semester berjalan.",
+            ans: "b"
+        },
+        {
+            no: 50,
+            q: "Setelah rancangan pembelajaran berbasis TIK selesai dibuat, pengembang melakukan uji coba draft produk kepada 1-3 orang mahasiswa (uji coba satu-satu/one-to-one evaluation), dilanjutkan kelompok kecil (small group evaluation). Tujuan utama dari evaluasi formatif dalam tahapan pengembangan rancangan ini adalah...",
+            a: "Mengesahkan bahwa rancangan tersebut sudah siap dijual secara komersial ke publik.", b: "Mendapatkan masukan, mendeteksi kelemahan materi/sistem, dan merevisi rancangan agar lebih efektif sebelum diimplementasikan secara massal.", c: "Memberikan nilai kelulusan awal (IPK) bagi mahasiswa yang bersedia menjadi subjek uji coba.", d: "Mengganti seluruh kompetensi dasar yang telah ditetapkan di awal perencanaan.", e: "Memilih dosen mana yang paling berhak menggunakan teknologi tersebut di kelasnya.",
+            ans: "b"
+        }
+    ];
+
+    // GENERATE ELEMENT SOAL KE HTML
+    const quizContainer = document.getElementById('quiz-container');
+    
+    daftarSoal.forEach((soal) => {
+        const questionCard = document.createElement('div');
+        questionCard.className = 'question-card';
+        
+        questionCard.innerHTML = `
+            <div class="question-text">${soal.no}. ${soal.q}</div>
+            <ul class="options-list">
+                <li class="option-item" onclick="pilihRadio('q${soal.no}', 'a')">
+                    <input type="radio" name="q${soal.no}" value="a" id="q${soal.no}_a">
+                    <span class="option-text">A. ${soal.a}</span>
+                </li>
+                <li class="option-item" onclick="pilihRadio('q${soal.no}', 'b')">
+                    <input type="radio" name="q${soal.no}" value="b" id="q${soal.no}_b">
+                    <span class="option-text">B. ${soal.b}</span>
+                </li>
+                <li class="option-item" onclick="pilihRadio('q${soal.no}', 'c')">
+                    <input type="radio" name="q${soal.no}" value="c" id="q${soal.no}_c">
+                    <span class="option-text">C. ${soal.c}</span>
+                </li>
+                <li class="option-item" onclick="pilihRadio('q${soal.no}', 'd')">
+                    <input type="radio" name="q${soal.no}" value="d" id="q${soal.no}_d">
+                    <span class="option-text">D. ${soal.d}</span>
+                </li>
+                <li class="option-item" onclick="pilihRadio('q${soal.no}', 'e')">
+                    <input type="radio" name="q${soal.no}" value="e" id="q${soal.no}_e">
+                    <span class="option-text">E. ${soal.e}</span>
+                </li>
+            </ul>
+        `;
+        quizContainer.appendChild(questionCard);
+    });
+
+    // FUNGSI KLIK CARD UNTUK PILIH RADIO BUTTON
+    function pilihRadio(name, val) {
+        document.getElementById(name + '_' + val).checked = true;
+    }
+
+    // LOGIKA TIMER 120 MENIT
+    let totalDetik;
+    let hitungMundur;
+    const timerBox = document.getElementById('timer-box');
+
+    function mulaiTimer() {
+        totalDetik = 120 * 60;
+        hitungMundur = setInterval(() => {
+            let menit = Math.floor(totalDetik / 60);
+            let detik = totalDetik % 60;
+
+            menit = menit < 10 ? '0' + menit : menit;
+            detik = detik < 10 ? '0' + detik : detik;
+
+            timerBox.innerText = `Sisa Waktu: ${menit}:${detik}`;
+
+            if (totalDetik <= 0) {
+                clearInterval(hitungMundur);
+                alert("Waktu ujian telah habis! Sistem akan otomatis menghitung skor Anda.");
+                hitungSkor();
+            }
+            totalDetik--;
+        }, 1000);
+    }
+
+    // Jalankan timer pertama kali
+    mulaiTimer();
+
+    // FUNGSI MENGHITUNG SKOR OTOMATIS (SUDAH DIPERBAIKI)
+    function hitungSkor() {
+        let jawabanBenar = 0;
+        const form = document.getElementById('quiz-form');
+
+        daftarSoal.forEach((soal) => {
+            const terpilih = form.elements[`q${soal.no}`].value;
+            if (terpilih === soal.ans) {
+                jawabanBenar++;
+            }
+        });
+
+        let skorAkhir = (jawabanBenar / daftarSoal.length) * 100;
+        skorAkhir = Math.round(skorAkhir * 100) / 100;
+
+        document.getElementById('final-score').innerText = skorAkhir;
+        document.getElementById('score-details').innerText = `Anda menjawab benar ${jawabanBenar} dari 50 soal.`;
+        document.getElementById('result-modal').style.display = 'flex';
+        
+        clearInterval(hitungMundur);
+        window.scrollTo(0, 0);
+    }
+
+    // FUNGSI ULANG UJIAN (RESET SEMUA DATA)
+    function ulangUjian() {
+        const form = document.getElementById('quiz-form');
+        form.reset();
+        tutupModal();
+        clearInterval(hitungMundur);
+        mulaiTimer();
+        window.scrollTo(0, 0);
+    }
+
+    // FUNGSI TUTUP MODAL
+    function tutupModal() {
+        document.getElementById('result-modal').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
